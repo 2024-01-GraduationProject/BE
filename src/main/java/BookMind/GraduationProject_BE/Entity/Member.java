@@ -24,4 +24,7 @@ public class Member {
     @Column(nullable = false)
     // NULL 값이 존재하지 않도록 설정
     private String password;
+
+    private String nickname;
+    private String agreements;
 }
