@@ -33,6 +33,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	//JUnit4 추가
+	testImplementation("org.junit.vintage:junit-vintage-engine") {
+		exclude group: "org.hamcrest", module: "hamcrest-core"
+	}
 	// HttpServletRequest 객체 주입 및 클라이언트 요청 정보 처리를 위해 추가
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:4.0.4'
 }
