@@ -18,7 +18,7 @@ public class MemberService {
 
     // 회원 가입
     @Transactional
-    public Long join(MemberDTO memberDTO) {
+    public String join(MemberDTO memberDTO) {
         validateDuplicateMember(memberDTO); // 중복 회원 검사
 
         // MemberDTO를 Member로 변환
@@ -27,7 +27,7 @@ public class MemberService {
         member.setPassword(memberDTO.getPassword());
         member.setNickname(memberDTO.getNickname());
         memberRepository.save(member);
-        return member.getId();
+        return member.getEmail();
     }
 
     // 회원 전체 조회
