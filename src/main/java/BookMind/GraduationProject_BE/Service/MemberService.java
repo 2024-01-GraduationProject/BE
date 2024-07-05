@@ -26,6 +26,7 @@ public class MemberService {
         member.setEmail(memberDTO.getEmail());
         member.setPassword(memberDTO.getPassword());
         member.setNickname(memberDTO.getNickname());
+        member.setAgreements(memberDTO.getAgreements());
         memberRepository.save(member);
         return member.getEmail();
     }
