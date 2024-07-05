@@ -39,14 +39,7 @@ public class MemberService {
     private void validateDuplicateMember(MemberDTO memberDTO) {
         List<Member> findMembers = memberRepository.findByEmail(memberDTO.getEmail());
         if (!findMembers.isEmpty()) {
-            throw new DuplicateMemberException("이미 존재하는 회원입니다.");
-        }
-    }
-
-    // 예외 처리 메서드
-    public class DuplicateMemberException extends RuntimeException {
-        public DuplicateMemberException(String message) {
-            super(message);
+            throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
 }
