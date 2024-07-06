@@ -26,5 +26,7 @@ public class Member {
     private String password;
 
     private String nickname;
-    private String agreements;
+
+    @Embedded //Agreements 클래스의 필드들이 Member 엔티티의 컬럼으로 저장
+    private Agreements agreements;
 }

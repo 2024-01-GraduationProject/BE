@@ -26,8 +26,7 @@ public class MemberController {
     // 회원가입 폼 제출(Post 요청) (회원 데이터를 등록)
     @PostMapping("/register")
     public ResponseEntity<?> save(@RequestBody MemberDTO memberDTO) {
-        //logger.info("MemberController.save - memberDTO = {}", memberDTO);
-
+        System.out.println("Received register request " + memberDTO);
         try {
             // MemberDTO를 Member로 변환하는 로직은 서비스 계층에서 이루어짐
             // 그렇게 되면 컨트롤러는 순수하게 HTTP 요청과 응답만 처리 가능
