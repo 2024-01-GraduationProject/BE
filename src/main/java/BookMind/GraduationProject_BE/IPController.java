@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@RestController
+// 클라이언트의 IP 주소를 반환하는 RESTful API를 정의하는 클래스
+@RestController // RESTful 웹 서비스의 컨트롤러임을 의미
 @RequestMapping("/test")
 public class IPController {
 
