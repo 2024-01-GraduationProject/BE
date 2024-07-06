@@ -16,4 +16,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .allowedOrigins("http://"+this.ipAddress+":"+this.frontEndPort);
     }
+
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")  // 모든 경로에 대해 CORS 허용
+//                .allowCredentials(true)
+//                .allowedOrigins("http://"+this.ipAddress+":"+this.frontEndPort)
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");  // 허용된 HTTP 메소드
+//    }
 }
