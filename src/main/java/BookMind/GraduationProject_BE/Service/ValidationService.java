@@ -15,4 +15,6 @@ public class ValidationService {
     public boolean isDuplicateEmail(String email) {
         return !memberRepository.findByEmail(email).isEmpty();
     }
+
+    public boolean isDuplicateNickname(String nickname) {return !memberRepository.findByNickname(nickname).isEmpty();}
 }

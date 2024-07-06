@@ -1,6 +1,7 @@
 package BookMind.GraduationProject_BE.Controller;
 
 import BookMind.GraduationProject_BE.DTO.EmailRequest;
+import BookMind.GraduationProject_BE.DTO.NicknameRequest;
 import BookMind.GraduationProject_BE.Service.ValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,15 @@ public class ValidationController {
     @PostMapping("/validate-email")
     public ResponseEntity<Map<String, Boolean>> validateEmail(@RequestBody EmailRequest emailRequest) {
         boolean isDuplicate = validationService.isDuplicateEmail(emailRequest.getEmail());
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isDuplicate", isDuplicate);
+        return ResponseEntity.ok(response);
+    }
+
+    // 닉네임 중복 여부 확인 엔드포인트
+    @PostMapping("/validate-nickname")
+    public ResponseEntity<Map<String, Boolean>> validateNickname(@RequestBody NicknameRequest nicknameRequest) {
+        boolean isDuplicate = validationService.isDuplicateNickname(nicknameRequest.getNickname());
         Map<String, Boolean> response = new HashMap<>();
         response.put("isDuplicate", isDuplicate);
         return ResponseEntity.ok(response);

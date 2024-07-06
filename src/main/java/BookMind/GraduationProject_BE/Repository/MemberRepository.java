@@ -27,6 +27,13 @@ public class MemberRepository {
                 .getResultList();
     }
 
+    // 회원 조회 _ 특정 닉네임을 갖는 Member 엔티티 조회
+    public List<Member> findByNickname(String nickname) {
+        return  em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
+                .setParameter("nickname", nickname)
+                .getResultList();
+    }
+
     // 회원 전체 조회
     public List<Member> findAll() {
         return em.createQuery("select m from Member m", Member.class)
