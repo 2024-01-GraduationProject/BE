@@ -88,7 +88,8 @@ public class MemberController {
             System.out.println("informationAndTasteDTO = " + informationAndTasteDTO);
             Member updatedMember = memberService.saveTaste(informationAndTasteDTO);
             System.out.println("updatedMember = " + updatedMember);
-            return ResponseEntity.status(HttpStatus.CREATED).body(updatedMember);
+            // 응답 상태 코드: 200으로 설정, 업데이트된 멤버 정보를 클라이언트에게 반환
+            return ResponseEntity.status(HttpStatus.OK).body(updatedMember);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
