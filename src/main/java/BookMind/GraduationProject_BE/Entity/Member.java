@@ -34,12 +34,12 @@ public class Member {
 
     // 사용자의 선택에 따라 새롭게 추가되는 정보들
     // 연령, 성별, 책 취향 정보
-    private String selectedAges;
+    private String age;
 
-    private String selectedGenders;
+    private String gender;
 
     @ElementCollection
     @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "taste")
-    private List<String> selectedMoods;
+    private List<String> mood;
 }

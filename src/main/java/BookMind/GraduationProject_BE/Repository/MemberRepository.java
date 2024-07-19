@@ -24,9 +24,9 @@ public class MemberRepository {
     // 회원 정보 추가 등록 (연령, 성별, 도서 취향)
     public void saveInformationAndTaste(Member member, InformationAndTasteDTO informationAndTasteDTO) {
         // Member 엔티티에 InformationAndTasteDTO 정보 설정
-        member.setSelectedAges(informationAndTasteDTO.getSelectedAge());
-        member.setSelectedGenders(informationAndTasteDTO.getSelectedGender());
-        member.setSelectedMoods(informationAndTasteDTO.getSelectedMoods());
+        member.setAge(informationAndTasteDTO.getAge());
+        member.setGender(informationAndTasteDTO.getGender());
+        member.setMood(informationAndTasteDTO.getMood());
 
         em.persist(member);
     }
