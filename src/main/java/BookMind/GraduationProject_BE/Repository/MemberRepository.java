@@ -1,5 +1,6 @@
 package BookMind.GraduationProject_BE.Repository;
 
+import BookMind.GraduationProject_BE.DTO.InformationAndTasteDTO;
 import BookMind.GraduationProject_BE.Entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,6 +18,16 @@ public class MemberRepository {
 
     // 회원 등록
     public void save(Member member) {
+        em.persist(member);
+    }
+
+    // 회원 정보 추가 등록 (연령, 성별, 도서 취향)
+    public void saveInformationAndTaste(Member member, InformationAndTasteDTO informationAndTasteDTO) {
+        // Member 엔티티에 InformationAndTasteDTO 정보 설정
+        member.setSelectedAges(informationAndTasteDTO.getSelectedAge());
+        member.setSelectedGenders(informationAndTasteDTO.getSelectedGender());
+        member.setSelectedMoods(informationAndTasteDTO.getSelectedMoods());
+
         em.persist(member);
     }
 
@@ -39,4 +50,14 @@ public class MemberRepository {
         return em.createQuery("select m from Member m", Member.class)
                 .getResultList();
     }
+
+//    // 회원 조회 _ 특정 나이, 성별, 기분을 갖는 Member 엔티티 조회
+//    public List<Member> findByInformationAndTaste(String selectedAge, String selectedGender, String selectedMoods) {
+//        return em.createQuery("select m from Member m where m.selectedAge = :selectedAge and m.selectedGender = :selectedGender and m.selectedMoods = :selectedMoods", Member.class)
+//                .setParameter("selectedAge", selectedAge)
+//                .setParameter("selectedGender", selectedGender)
+//                .setParameter("selectedMoods", selectedMoods)
+//                .getResultList();
+//    }
+
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter @Setter  // ***** setter는 닫아두는 것이 좋음. 하지만 개발 중에는 열어둠.
 public class Member {
@@ -29,4 +31,15 @@ public class Member {
 
     @Embedded //Agreements 클래스의 필드들이 Member 엔티티의 컬럼으로 저장
     private Agreements agreements;
+
+    // 사용자의 선택에 따라 새롭게 추가되는 정보들
+    // 연령, 성별, 책 취향 정보
+    private String selectedAges;
+
+    private String selectedGenders;
+
+    @ElementCollection
+    @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "taste")
+    private List<String> selectedMoods;
 }

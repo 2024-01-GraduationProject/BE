@@ -1,9 +1,11 @@
 package BookMind.GraduationProject_BE.Controller;
 
+import BookMind.GraduationProject_BE.DTO.InformationAndTasteDTO;
 import BookMind.GraduationProject_BE.DTO.MemberDTO;
 import BookMind.GraduationProject_BE.Entity.Age;
 import BookMind.GraduationProject_BE.Entity.BookCategory;
 import BookMind.GraduationProject_BE.Entity.Gender;
+import BookMind.GraduationProject_BE.Entity.Member;
 import BookMind.GraduationProject_BE.Repository.AgeRepository;
 import BookMind.GraduationProject_BE.Repository.BookCategoryRepository;
 import BookMind.GraduationProject_BE.Repository.GenderRepository;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,4 +81,16 @@ public class MemberController {
         return new ResponseEntity<>(bookCategories, HttpStatus.OK);
     }
 
+    // 사용자의 연령, 성별, 취향 정보 등록
+    @PostMapping("/save-taste")
+    public ResponseEntity<Member> updateMemberTaste(@RequestBody InformationAndTasteDTO informationAndTasteDTO) {
+        try {
+            System.out.println("informationAndTasteDTO = " + informationAndTasteDTO);
+            Member updatedMember = memberService.saveTaste(informationAndTasteDTO);
+            System.out.println("updatedMember = " + updatedMember);
+            return ResponseEntity.status(HttpStatus.CREATED).body(updatedMember);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
