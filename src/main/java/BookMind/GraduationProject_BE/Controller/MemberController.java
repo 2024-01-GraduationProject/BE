@@ -110,8 +110,14 @@ public class MemberController {
             return ResponseEntity.ok(loginResult); // 로그인 성공시 memberDTO 객체 반환
         } else {
             // login 실패
-            return ResponseEntity.badRequest().body("로그인 실패");
+            return ResponseEntity.badRequest().body("로그인 실패"); // 응답 상태 코드 400
         }
     }
 
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate(); // 현재 세션을 무효화
+        return ResponseEntity.ok("로그아웃 성공");
+    }
 }
