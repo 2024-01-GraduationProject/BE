@@ -10,6 +10,7 @@ import BookMind.GraduationProject_BE.Repository.AgeRepository;
 import BookMind.GraduationProject_BE.Repository.BookCategoryRepository;
 import BookMind.GraduationProject_BE.Repository.GenderRepository;
 import BookMind.GraduationProject_BE.Service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,6 @@ public class MemberController {
 
     // 로그를 기록하기 위한 로그 객체 생성
     //private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-
     @Autowired
     private final MemberService memberService;
     @Autowired
@@ -36,10 +36,9 @@ public class MemberController {
     @Autowired
     private final BookCategoryRepository bookCategoryRepository;
 
-    // 회원가입 폼(Get 요청)
-    @GetMapping("/register")
-    public String saveForm() {
-        return "register";} // register 이름을 가진 뷰가 렌더링 됨
+    // 프론트엔드에서 직접 회원가입 폼을 제공함. GetMapping 필요 없음.
+//    @GetMapping("/register")
+//    public String saveForm() {return "register";}
 
     // 회원가입 폼 제출(Post 요청) (회원 데이터를 등록)
     @PostMapping("/register")
@@ -94,4 +93,25 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // 프론트엔드에서 직접 로그인 폼 제공함.
+//    @GetMapping("/login")
+//    public String loginForm() { return "login"; }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO, HttpSession session) {
+        MemberDTO loginResult = memberService.login(memberDTO);
+        if(loginResult != null) {
+            // 로그인 성공
+            session.setAttribute("loginEmail", loginResult.getEmail());
+            session.setAttribute("loginNickname", loginResult.getNickname());
+            System.out.println(loginResult.getNickname() + "님 로그인 성공");
+            return ResponseEntity.ok(loginResult); // 로그인 성공시 memberDTO 객체 반환
+        } else {
+            // login 실패
+            return ResponseEntity.badRequest().body("로그인 실패");
+        }
+    }
+
 }
