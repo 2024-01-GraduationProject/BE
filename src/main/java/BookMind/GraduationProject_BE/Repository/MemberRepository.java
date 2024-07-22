@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor // 생성자를 자동으로 생성해 줌 (의존성 주입 간편)
+// * 리팩토링 시 고려사항: JpaRepository를 상속받아서 class가 아닌 interface로 전환 고려해볼 것
 public class MemberRepository {
 
     @PersistenceContext
@@ -32,17 +34,21 @@ public class MemberRepository {
     }
 
     // 회원 조회 _ 특정 이메일을 갖는 Member 엔티티 조회
-    public List<Member> findByEmail(String email) {
-        return em.createQuery("select m from Member m where m.email = :email", Member.class)
+    public Optional<Member> findByEmail(String email) {
+        List<Member> members = em.createQuery("select m from Member m where m.email = :email", Member.class)
                 .setParameter("email", email)
                 .getResultList();
+
+        return members.stream().findFirst(); // 리스트에서 첫 번째 요소를 Optional로 반환
     }
 
     // 회원 조회 _ 특정 닉네임을 갖는 Member 엔티티 조회
-    public List<Member> findByNickname(String nickname) {
-        return  em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
+    public Optional<Member> findByNickname(String nickname) {
+        List<Member> members = em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
                 .setParameter("nickname", nickname)
                 .getResultList();
+
+        return members.stream().findFirst();
     }
 
     // 회원 전체 조회
@@ -50,14 +56,4 @@ public class MemberRepository {
         return em.createQuery("select m from Member m", Member.class)
                 .getResultList();
     }
-
-//    // 회원 조회 _ 특정 나이, 성별, 기분을 갖는 Member 엔티티 조회
-//    public List<Member> findByInformationAndTaste(String selectedAge, String selectedGender, String selectedMoods) {
-//        return em.createQuery("select m from Member m where m.selectedAge = :selectedAge and m.selectedGender = :selectedGender and m.selectedMoods = :selectedMoods", Member.class)
-//                .setParameter("selectedAge", selectedAge)
-//                .setParameter("selectedGender", selectedGender)
-//                .setParameter("selectedMoods", selectedMoods)
-//                .getResultList();
-//    }
-
 }
