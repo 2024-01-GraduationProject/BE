@@ -118,6 +118,7 @@ public class MemberController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate(); // 현재 세션을 무효화
+        System.out.println("로그아웃 완료");
         return ResponseEntity.ok("로그아웃 성공");
     }
 }
