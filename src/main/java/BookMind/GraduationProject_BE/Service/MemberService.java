@@ -119,6 +119,9 @@ public class MemberService {
         memberDTO.setPassword(member.getPassword());
         memberDTO.setNickname(member.getNickname());
         memberDTO.setAgreements(member.getAgreements());
+        memberDTO.setAge(member.getAge());
+        memberDTO.setGender(member.getGender());
+        memberDTO.setMood(member.getMood());
 
         return memberDTO;
     }
