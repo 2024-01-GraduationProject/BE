@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,4 +20,8 @@ public class MemberDTO {
     private String password;
     private String nickname;
     private Agreements agreements;
+    // 추가적으로 등록한 사용자 정보
+    private String age;
+    private String gender;
+    private List<String> mood;
 }
