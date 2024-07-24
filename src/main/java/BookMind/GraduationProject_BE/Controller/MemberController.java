@@ -106,7 +106,13 @@ public class MemberController {
             // 로그인 성공
             session.setAttribute("loginEmail", loginResult.getEmail());
             session.setAttribute("loginNickname", loginResult.getNickname());
-            System.out.println(loginResult.getNickname() + "님 로그인 성공");
+            session.setAttribute("loginPassword", loginResult.getPassword());
+            session.setAttribute("userAge", loginResult.getAge());
+            session.setAttribute("userGender", loginResult.getGender());
+            session.setAttribute("userInterests", loginResult.getMood());
+            session.setAttribute("userAgreements", loginResult.getAgreements());
+            System.out.println(session.getAttribute("loginNickname") + "님 로그인 성공");
+            System.out.println("Session ID: " + session.getId()); // session ID 출력
             return ResponseEntity.ok(loginResult); // 로그인 성공시 memberDTO 객체 반환
         } else {
             // login 실패
