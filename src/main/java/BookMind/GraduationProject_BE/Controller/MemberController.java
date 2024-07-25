@@ -29,16 +29,6 @@ public class MemberController {
     //private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
     @Autowired
     private final MemberService memberService;
-    @Autowired
-    private final AgeRepository ageRepository;
-    @Autowired
-    private final GenderRepository genderRepository;
-    @Autowired
-    private final BookCategoryRepository bookCategoryRepository;
-
-    // 프론트엔드에서 직접 회원가입 폼을 제공함. GetMapping 필요 없음.
-//    @GetMapping("/register")
-//    public String saveForm() {return "register";}
 
     // 회원가입 폼 제출(Post 요청) (회원 데이터를 등록)
     @PostMapping("/register")
@@ -58,28 +48,6 @@ public class MemberController {
         }
     }
 
-    // 연령 데이터를 조회
-    @GetMapping("/ages")
-    public ResponseEntity<List<Age>> getAllAges() {
-        List<Age> ages = ageRepository.findAll();
-        System.out.println("연령 데이터 불러오기 성공");
-        return new ResponseEntity<>(ages, HttpStatus.OK);
-    }
-    // 성별 데이터를 조회
-    @GetMapping("/genders")
-    public ResponseEntity<List<Gender>> getAllGenders() {
-        List<Gender> genders = genderRepository.findAll();
-        System.out.println("성별 데이터 불러오기 성공");
-        return new ResponseEntity<>(genders, HttpStatus.OK);
-    }
-    // 책 카테고리 데이터를 조회
-    @GetMapping("/book-categories")
-    public ResponseEntity<List<BookCategory>> getAllBookCategories() {
-        List<BookCategory> bookCategories = bookCategoryRepository.findAll();
-        System.out.println("책 카테고리 데이터 불러오기 성공");
-        return new ResponseEntity<>(bookCategories, HttpStatus.OK);
-    }
-
     // 사용자의 연령, 성별, 취향 정보 등록
     @PostMapping("/save-taste")
     public ResponseEntity<Member> updateMemberTaste(@RequestBody InformationAndTasteDTO informationAndTasteDTO) {
@@ -93,10 +61,6 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    // 프론트엔드에서 직접 로그인 폼 제공함.
-//    @GetMapping("/login")
-//    public String loginForm() { return "login"; }
 
     // 로그인
     @PostMapping("/login")
