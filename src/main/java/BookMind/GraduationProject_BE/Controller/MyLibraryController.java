@@ -16,9 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyLibraryController {
 
-    @Autowired
-    private final MemberService memberService;
-
     // 내 서재 _ 사용자 닉네임 불러오기
     @GetMapping("/user-nickname")
     public ResponseEntity<?> getNickname(HttpSession session) {
