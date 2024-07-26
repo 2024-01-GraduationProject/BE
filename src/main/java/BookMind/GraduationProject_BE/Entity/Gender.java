@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Gender {
 
     @Id
-    private int id;  // PK
+    private int gender_id;  // PK
 
     private String gender;
 }

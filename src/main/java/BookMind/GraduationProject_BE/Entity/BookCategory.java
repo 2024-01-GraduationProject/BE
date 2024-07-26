@@ -13,7 +13,7 @@ import lombok.Setter;
 public class BookCategory {
 
     @Id
-    private int id;  // PK
+    private int category_id;  // PK
 
     private String category;
 

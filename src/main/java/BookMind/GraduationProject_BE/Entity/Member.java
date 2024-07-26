@@ -14,7 +14,7 @@ public class Member {
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // id값이 DB에 저장될 때 자동으로 증가하면서 생성
-    private Long id;
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     // email에 해당하는 컬럼은 NULL 값을 가질 수 없고, 각 값이 유일하도록 설정
@@ -39,7 +39,7 @@ public class Member {
     private String gender;
 
     @ElementCollection
-    @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "taste")
     private List<String> mood;
 }
