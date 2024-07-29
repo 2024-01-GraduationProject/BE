@@ -68,6 +68,7 @@ public class MemberController {
         MemberDTO loginResult = memberService.login(memberDTO);
         if(loginResult != null) {
             // 로그인 성공
+            session.setAttribute("userId", loginResult.getUserId());
             session.setAttribute("loginEmail", loginResult.getEmail());
             session.setAttribute("loginNickname", loginResult.getNickname());
             session.setAttribute("loginPassword", loginResult.getPassword());
@@ -77,6 +78,7 @@ public class MemberController {
             session.setAttribute("userAgreements", loginResult.getAgreements());
             session.setAttribute("loginMethod", "BookMind 회원");
             System.out.println(session.getAttribute("loginNickname") + "님 로그인 성공");
+            System.out.println("loginResult = " + loginResult);
             System.out.println("Session ID: " + session.getId()); // session ID 출력
             return ResponseEntity.ok(loginResult); // 로그인 성공시 memberDTO 객체 반환
         } else {

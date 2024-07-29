@@ -33,6 +33,15 @@ public class MemberRepository {
         em.persist(member);
     }
 
+    // 회원 조회 _ 특정 아이디를 갖는 Member 엔티티 조회
+    public Optional<Member> findByUserId(Long userId) {
+        List<Member> members = em.createQuery("select m from Member m where m.userId = :userId", Member.class)
+                .setParameter("userId", userId)
+                .getResultList();
+
+        return members.stream().findFirst();
+    }
+
     // 회원 조회 _ 특정 이메일을 갖는 Member 엔티티 조회
     public Optional<Member> findByEmail(String email) {
         List<Member> members = em.createQuery("select m from Member m where m.email = :email", Member.class)

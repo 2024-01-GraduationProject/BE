@@ -2,6 +2,8 @@ package BookMind.GraduationProject_BE.Service;
 
 import BookMind.GraduationProject_BE.DTO.InformationAndTasteDTO;
 import BookMind.GraduationProject_BE.DTO.MemberDTO;
+import BookMind.GraduationProject_BE.DTO.UpdateMemberDTO;
+import BookMind.GraduationProject_BE.Entity.Agreements;
 import BookMind.GraduationProject_BE.Entity.Member;
 import BookMind.GraduationProject_BE.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -110,6 +112,30 @@ public class MemberService {
 //        }
 //    }
 
+    // 회원정보 업데이트
+    public Member updateMember(Long userId, UpdateMemberDTO updateMemberDTO) {
+        // DB에서 회원 정보 찾기
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        // DTO의 정보를 사용하여 회원 정보 업데이트
+        member.setNickname(updateMemberDTO.getNewNickname());
+        member.setEmail(updateMemberDTO.getNewEmail());
+        member.setPassword(updateMemberDTO.getNewPassword());
+        member.setAge(updateMemberDTO.getNewAge());
+        member.setGender(updateMemberDTO.getNewGender());
+        member.setMood(updateMemberDTO.getNewMood());
+
+        // Agreements 중 EventAlarm만 업데이트
+        Agreements agreements = member.getAgreements();
+        agreements.setEventAlarm(updateMemberDTO.getAgreements().isEventAlarm()); // eventAlarm 값 업데이트
+        member.setAgreements(agreements);
+
+        // 업데이트된 회원 정보를 DB에 저장
+        memberRepository.save(member);
+
+        return member;
+    }
 
     // member 객체를 memberDTO로 변환하는 메서드
     public MemberDTO toMemberDTO(Member member) {
