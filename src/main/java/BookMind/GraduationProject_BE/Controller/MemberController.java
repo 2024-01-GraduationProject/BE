@@ -75,6 +75,7 @@ public class MemberController {
             session.setAttribute("userGender", loginResult.getGender());
             session.setAttribute("userInterests", loginResult.getMood());
             session.setAttribute("userAgreements", loginResult.getAgreements());
+            session.setAttribute("loginMethod", "BookMind 회원");
             System.out.println(session.getAttribute("loginNickname") + "님 로그인 성공");
             System.out.println("Session ID: " + session.getId()); // session ID 출력
             return ResponseEntity.ok(loginResult); // 로그인 성공시 memberDTO 객체 반환

@@ -42,4 +42,7 @@ public class Member {
     @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "taste")
     private List<String> mood;
+
+    // 로그인 방식
+    private String loginMethod;
 }

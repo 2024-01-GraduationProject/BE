@@ -24,4 +24,6 @@ public class MemberDTO {
     private String age;
     private String gender;
     private List<String> mood;
+    // 로그인 방식
+    private String loginMethod;
 }
