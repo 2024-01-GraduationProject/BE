@@ -11,7 +11,7 @@ import java.util.List;
 public class UpdateMemberDTO {
 
     private String newNickname;
-    private String newEmail;
+//    private String newEmail;
     private String newPassword;
     private String newAge;
     private String newGender;

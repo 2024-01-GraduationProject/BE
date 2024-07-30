@@ -120,7 +120,7 @@ public class MemberService {
 
         // DTO의 정보를 사용하여 회원 정보 업데이트
         member.setNickname(updateMemberDTO.getNewNickname());
-        member.setEmail(updateMemberDTO.getNewEmail());
+//        member.setEmail(updateMemberDTO.getNewEmail());
         member.setPassword(updateMemberDTO.getNewPassword());
         member.setAge(updateMemberDTO.getNewAge());
         member.setGender(updateMemberDTO.getNewGender());
