@@ -42,7 +42,7 @@ public class DataController {
     }
     // 책 카테고리 데이터를 조회
     @GetMapping("/categories")
-    public ResponseEntity<List<Category>> getAllBookCategories() {
+    public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         System.out.println("책 카테고리 데이터 불러오기 성공");
         return new ResponseEntity<>(categories, HttpStatus.OK);
