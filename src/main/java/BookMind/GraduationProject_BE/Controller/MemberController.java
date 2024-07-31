@@ -2,13 +2,7 @@ package BookMind.GraduationProject_BE.Controller;
 
 import BookMind.GraduationProject_BE.DTO.InformationAndTasteDTO;
 import BookMind.GraduationProject_BE.DTO.MemberDTO;
-import BookMind.GraduationProject_BE.Entity.Age;
-import BookMind.GraduationProject_BE.Entity.BookCategory;
-import BookMind.GraduationProject_BE.Entity.Gender;
 import BookMind.GraduationProject_BE.Entity.Member;
-import BookMind.GraduationProject_BE.Repository.AgeRepository;
-import BookMind.GraduationProject_BE.Repository.BookCategoryRepository;
-import BookMind.GraduationProject_BE.Repository.GenderRepository;
 import BookMind.GraduationProject_BE.Service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.GetExchange;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController

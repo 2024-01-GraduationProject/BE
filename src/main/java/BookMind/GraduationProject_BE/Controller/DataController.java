@@ -1,10 +1,10 @@
 package BookMind.GraduationProject_BE.Controller;
 
 import BookMind.GraduationProject_BE.Entity.Age;
-import BookMind.GraduationProject_BE.Entity.BookCategory;
+import BookMind.GraduationProject_BE.Entity.Category;
 import BookMind.GraduationProject_BE.Entity.Gender;
 import BookMind.GraduationProject_BE.Repository.AgeRepository;
-import BookMind.GraduationProject_BE.Repository.BookCategoryRepository;
+import BookMind.GraduationProject_BE.Repository.CategoryRepository;
 import BookMind.GraduationProject_BE.Repository.GenderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class DataController {
     @Autowired
     private final GenderRepository genderRepository;
     @Autowired
-    private final BookCategoryRepository bookCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     // 연령 데이터를 조회
     @GetMapping("/ages")
@@ -41,11 +41,11 @@ public class DataController {
         return new ResponseEntity<>(genders, HttpStatus.OK);
     }
     // 책 카테고리 데이터를 조회
-    @GetMapping("/book-categories")
-    public ResponseEntity<List<BookCategory>> getAllBookCategories() {
-        List<BookCategory> bookCategories = bookCategoryRepository.findAll();
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getAllBookCategories() {
+        List<Category> categories = categoryRepository.findAll();
         System.out.println("책 카테고리 데이터 불러오기 성공");
-        return new ResponseEntity<>(bookCategories, HttpStatus.OK);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
 }
