@@ -33,6 +33,7 @@ public class MemberService {
         member.setPassword(memberDTO.getPassword());
         member.setNickname(memberDTO.getNickname());
         member.setAgreements(memberDTO.getAgreements());
+        member.setLoginMethod("BookMind 회원");
         memberRepository.save(member);
         return member.getEmail();
     }
@@ -168,7 +169,7 @@ public class MemberService {
         memberDTO.setAge(member.getAge());
         memberDTO.setGender(member.getGender());
         memberDTO.setMood(member.getMood());
-        memberDTO.setLoginMethod("BookMind 회원");
+        memberDTO.setLoginMethod(member.getLoginMethod());
 
         return memberDTO;
     }

@@ -47,5 +47,4 @@ public class DataController {
         System.out.println("책 카테고리 데이터 불러오기 성공");
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
-
 }
