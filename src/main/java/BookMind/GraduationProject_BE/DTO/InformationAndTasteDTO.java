@@ -1,5 +1,6 @@
 package BookMind.GraduationProject_BE.DTO;
 
+import BookMind.GraduationProject_BE.Entity.BookTaste;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,5 +19,5 @@ public class InformationAndTasteDTO {
     // 연령, 성별, 도서 취향
     private String age;
     private String gender;
-    private List<String> mood;
+    private List<String> bookTaste;
 }

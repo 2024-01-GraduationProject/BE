@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,11 +40,20 @@ public class Member {
 
     private String gender;
 
-    @ElementCollection
-    @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "taste")
-    private List<String> mood;
+//    @ElementCollection
+//    @CollectionTable(name = "book_taste", joinColumns = @JoinColumn(name = "user_id"))
+//    @Column(name = "taste")
+//    private List<String> mood;
+
+    // 위에 mood 지우고 아래 주석으로 바뀌어야 함. *****
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL) // Member와 BookTaste 간의 관계 설정
+    private List<BookTaste> bookTaste = new ArrayList<>(); // BookTaste 리스트
 
     // 로그인 방식
     private String loginMethod;
+
+    // 계정 생성 날짜 및 업데이트 날짜 (추가하기) *****
+//    private LocalDateTime createdAt;
+
+//    private LocalDateTime updatedAt;
 }

@@ -4,16 +4,21 @@ import BookMind.GraduationProject_BE.DTO.InformationAndTasteDTO;
 import BookMind.GraduationProject_BE.DTO.MemberDTO;
 import BookMind.GraduationProject_BE.DTO.UpdateMemberDTO;
 import BookMind.GraduationProject_BE.Entity.Agreements;
+import BookMind.GraduationProject_BE.Entity.BookTaste;
+import BookMind.GraduationProject_BE.Entity.Category;
 import BookMind.GraduationProject_BE.Entity.Member;
+import BookMind.GraduationProject_BE.Repository.CategoryRepository;
 import BookMind.GraduationProject_BE.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true) // 메서드들이 읽기 전용 트랜잭션으로 실행됨
@@ -21,6 +26,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
 
     // 회원 가입
     @Transactional
@@ -95,23 +101,12 @@ public class MemberService {
 
 //    // 로그인 (보안 및 가독성을 높인 버전 *** 추후 수정)
 //    // 비밀번호 해싱 관련 사항 고려할 것
-//    public MemberDTO login(MemberDTO memberDTO) {
 //        // 이메일로 회원 조회 후 memberByEmail에 회원 정보 할당
-//        Optional<Member> memberByEmail = memberRepository.findByEmail(memberDTO.getEmail());
 //
 //        // 회원 조회 -> 회원 존재
-//        Member member = memberByEmail.orElseThrow(() -> new NoSuchElementException("가입되어 있지 않은 회원입니다."));
-//
 //        // 비밀번호 일치 여부 확인 (해싱된 비밀번호 비교)
 //        // passwordEncoder는 Spring Security의 PasswordEncoder 인터페이스를 구현한 객체
-//        if (passwordEncoder.matches(memberDTO.getPassword(), member.getPassword())) {
-//            // 비밀번호 일치
-//            return memberDTO;
-//        } else {
-//            // 비밀번호 불일치
-//            throw new IllegalArgumentException("가입된 비밀번호와 일치하지 않습니다.");
-//        }
-//    }
+
 
     // 회원정보 업데이트
     @Transactional // 해당 어노테이션이 없으면 읽기 전용으로 처리되기 때문에 수정되지 않음.
@@ -138,8 +133,24 @@ public class MemberService {
             member.setGender(updateMemberDTO.getNewGender());
         }
 
-        if (updateMemberDTO.getNewMood() != null) {
-            member.setMood(updateMemberDTO.getNewMood());
+        // BookTaste 업데이트
+        if (updateMemberDTO.getNewBookTaste() != null) {
+            List<String> newBookTasteNames = updateMemberDTO.getNewBookTaste();
+            List<BookTaste> newBookTasteList = new ArrayList<>();
+
+            for (String tasteName : newBookTasteNames) {
+                // 각 카테고리 이름에 해당하는 Category 객체를 찾아야 함
+                Category category = categoryRepository.findByName(tasteName); // 카테고리 이름으로 조회
+
+                if (category != null) {
+                    BookTaste bookTaste = new BookTaste();
+                    bookTaste.setMember(member); // Member와의 관계 설정
+                    bookTaste.setCategory(category); // Category와의 관계 설정
+                    newBookTasteList.add(bookTaste);
+                }
+            }
+
+            member.setBookTaste(newBookTasteList); // Member 엔티티에 BookTaste 리스트 설정
         }
 
         // Agreements 중 EventAlarm만 업데이트
@@ -168,7 +179,13 @@ public class MemberService {
         memberDTO.setAgreements(member.getAgreements());
         memberDTO.setAge(member.getAge());
         memberDTO.setGender(member.getGender());
-        memberDTO.setMood(member.getMood());
+        // BookTaste 변환
+        if (member.getBookTaste() != null) {
+            List<String> bookTasteNames = member.getBookTaste().stream()
+                    .map(bookTaste -> bookTaste.getCategory().getCategory()) // 카테고리 이름 추출
+                    .collect(Collectors.toList());
+            memberDTO.setBookTaste(bookTasteNames);
+        }
         memberDTO.setLoginMethod(member.getLoginMethod());
 
         return memberDTO;
