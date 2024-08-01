@@ -1,12 +1,15 @@
 package BookMind.GraduationProject_BE.Repository;
 
 import BookMind.GraduationProject_BE.DTO.InformationAndTasteDTO;
+import BookMind.GraduationProject_BE.Entity.BookTaste;
+import BookMind.GraduationProject_BE.Entity.Category;
 import BookMind.GraduationProject_BE.Entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,8 @@ public class MemberRepository {
     @PersistenceContext
     private EntityManager em;
 
+    private final CategoryRepository categoryRepository;
+
     // 회원 등록
     public void save(Member member) {
         em.persist(member);
@@ -26,9 +31,26 @@ public class MemberRepository {
     // 회원 정보 추가 등록 (연령, 성별, 도서 취향)
     public void saveInformationAndTaste(Member member, InformationAndTasteDTO informationAndTasteDTO) {
         // Member 엔티티에 InformationAndTasteDTO 정보 설정
-        member.setAge(informationAndTasteDTO.getAge());
-        member.setGender(informationAndTasteDTO.getGender());
-        member.setMood(informationAndTasteDTO.getMood());
+        member.setAge(informationAndTasteDTO.getAge()); // 연령
+        member.setGender(informationAndTasteDTO.getGender()); // 성별
+
+        // BookTaste 정보를 Member 엔티티에 설정
+        List<String> bookTasteNames = informationAndTasteDTO.getBookTaste();
+        List<BookTaste> bookTasteList = new ArrayList<>();
+
+        for (String tasteName : bookTasteNames) {
+            // 각 카테고리 이름에 해당하는 Category 객체를 찾아야 함
+            Category category = categoryRepository.findByCategory(tasteName); // 카테고리 이름으로 조회
+
+            if (category != null) {
+                BookTaste bookTaste = new BookTaste();
+                bookTaste.setMember(member); // Member와의 관계 설정
+                bookTaste.setCategory(category); // Category와의 관계 설정
+                bookTasteList.add(bookTaste);
+            }
+        }
+
+        member.setBookTaste(bookTasteList); // 도서 취향
 
         em.persist(member);
     }

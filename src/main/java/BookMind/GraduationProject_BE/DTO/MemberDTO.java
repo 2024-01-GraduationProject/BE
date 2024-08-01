@@ -1,15 +1,12 @@
 package BookMind.GraduationProject_BE.DTO;
 
 import BookMind.GraduationProject_BE.Entity.Agreements;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import BookMind.GraduationProject_BE.Entity.BookTaste;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @ToString
 public class MemberDTO {
@@ -23,7 +20,7 @@ public class MemberDTO {
     // 추가적으로 등록한 사용자 정보
     private String age;
     private String gender;
-    private List<String> mood;
+    private List<String> bookTaste;
     // 로그인 방식
     private String loginMethod;
 }

@@ -1,13 +1,14 @@
 package BookMind.GraduationProject_BE.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "BOOK_CATEGORY") // 테이블 이름이 "BOOK_CATEGORY"임을 명시
+@Table(name = "category") // 테이블 이름이 "category"임을 명시
 @Getter
 @Setter
 public class Category {
@@ -17,6 +18,8 @@ public class Category {
 
     private String category;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL) // Category와 BookTaste 간의 관계 설정
+    private List<BookTaste> bookTaste = new ArrayList<>(); // 연결된 BookTaste 리스트
 }
 
 
