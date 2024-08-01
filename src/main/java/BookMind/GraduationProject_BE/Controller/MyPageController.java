@@ -31,6 +31,11 @@ public class MyPageController {
         }
         // 로그인 상태 확인 (세션은 존재)
         System.out.println("Session ID: " + session.getId());
+
+        // 로그인된 사용자 id 확인
+        Long userId = (Long) session.getAttribute("userId");
+        System.out.println("userId = " + userId);
+
         String loginNickname = (String) session.getAttribute("loginNickname");
         if (loginNickname == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -53,6 +58,8 @@ public class MyPageController {
     @PostMapping("/update-userData")
     public ResponseEntity<?> save(HttpSession session, @RequestBody UpdateMemberDTO updateMemberDTO) {
         System.out.println("변경 요청된 정보:" + updateMemberDTO);
+
+        // 로그인된 사용자 id 확인
         Long userId = (Long) session.getAttribute("userId");
         System.out.println("userId = " + userId);
 
