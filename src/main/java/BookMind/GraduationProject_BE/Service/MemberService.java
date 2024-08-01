@@ -113,6 +113,7 @@ public class MemberService {
 //    }
 
     // 회원정보 업데이트
+    @Transactional // 해당 어노테이션이 없으면 읽기 전용으로 처리되기 때문에 수정되지 않음.
     public Member updateMember(Long userId, UpdateMemberDTO updateMemberDTO) {
         // DB에서 회원 정보 찾기
         Member member = memberRepository.findByUserId(userId)
