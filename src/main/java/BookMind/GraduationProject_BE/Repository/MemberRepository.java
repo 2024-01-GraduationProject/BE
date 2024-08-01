@@ -40,7 +40,7 @@ public class MemberRepository {
 
         for (String tasteName : bookTasteNames) {
             // 각 카테고리 이름에 해당하는 Category 객체를 찾아야 함
-            Category category = categoryRepository.findByName(tasteName); // 카테고리 이름으로 조회
+            Category category = categoryRepository.findByCategory(tasteName); // 카테고리 이름으로 조회
 
             if (category != null) {
                 BookTaste bookTaste = new BookTaste();
