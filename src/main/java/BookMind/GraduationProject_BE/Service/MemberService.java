@@ -167,6 +167,7 @@ public class MemberService {
         memberDTO.setAge(member.getAge());
         memberDTO.setGender(member.getGender());
         memberDTO.setMood(member.getMood());
+        memberDTO.setLoginMethod("BookMind 회원");
 
         return memberDTO;
     }
