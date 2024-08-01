@@ -159,6 +159,7 @@ public class MemberService {
     public MemberDTO toMemberDTO(Member member) {
         MemberDTO memberDTO = new MemberDTO();
 
+        memberDTO.setUserId(member.getUserId());
         memberDTO.setEmail(member.getEmail());
         memberDTO.setPassword(member.getPassword());
         memberDTO.setNickname(member.getNickname());
