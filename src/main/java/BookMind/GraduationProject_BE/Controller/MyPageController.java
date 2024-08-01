@@ -29,28 +29,22 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("세션이 존재하지 않습니다. 로그인해 주세요.");
         }
-        // 로그인 상태 확인 (세션은 존재)
+        // 세션 정보 확인
         System.out.println("Session ID: " + session.getId());
 
-        // 로그인된 사용자 id 확인
-        Long userId = (Long) session.getAttribute("userId");
-        System.out.println("userId = " + userId);
+        // 세션에 저장된 사용자의 정보를 불러옴
+        MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
 
-        String loginNickname = (String) session.getAttribute("loginNickname");
+        // 로그인 여부 확인
+        String loginNickname = userData.getNickname();
         if (loginNickname == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("세션이 만료되었거나, 로그인하지 않았습니다.");
         }
-        // 정상적으로 로그인한 경우
-        MemberDTO userData = new MemberDTO();
-        userData.setNickname(loginNickname); // 닉네임
-        userData.setEmail((String) session.getAttribute("loginEmail")); // 이메일
-        userData.setAge((String) session.getAttribute("userAge")); // 연령대
-        userData.setGender((String) session.getAttribute("userGender")); // 성별
-        userData.setMood((List<String>) session.getAttribute("userInterests")); // 관심분야
-        userData.setLoginMethod((String) session.getAttribute("loginMethod")); // 로그인 방식
-        userData.setAgreements((Agreements) session.getAttribute("userAgreements")); // 약관동의
 
+        // 정상적으로 로그인한 경우
+        System.out.println(loginNickname + "님의 마이페이지");
+        System.out.println("userData = " + userData);
         return ResponseEntity.ok(userData);
     }
 
@@ -60,7 +54,8 @@ public class MyPageController {
         System.out.println("변경 요청된 정보:" + updateMemberDTO);
 
         // 로그인된 사용자 id 확인
-        Long userId = (Long) session.getAttribute("userId");
+        MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
+        Long userId = userData.getUserId();
         System.out.println("userId = " + userId);
 
         // 세션에 로그인 정보가 없을 때
@@ -69,10 +64,15 @@ public class MyPageController {
         }
 
         try {
+            // 회원 정보 업데이트
             Member updatedMember = memberService.updateMember(userId, updateMemberDTO);
+            // updatedMember -> DTO로 변환
+            MemberDTO updatedMemberDTO = memberService.toMemberDTO(updatedMember);
+            // 세션에 저장된 사용자 정보 업데이트
+            session.setAttribute("loginUser", updatedMemberDTO);
             System.out.println("회원정보가 업데이트 되었습니다.");
-            System.out.println("updatedMember = " + updatedMember);
-            return ResponseEntity.ok(updatedMember);
+            System.out.println("updatedMemberDTO = " + updatedMemberDTO);
+            return ResponseEntity.ok(updatedMemberDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 저장 도중에 문제가 발생했습니다.");
         }

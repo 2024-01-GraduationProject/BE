@@ -20,8 +20,10 @@ public class MyLibraryController {
     @GetMapping("/user-nickname")
     public ResponseEntity<?> getNickname(HttpSession session) {
         System.out.println("Session ID: " + session.getId());
-        // 세션에서 사용자 정보를 가져옴
-        String loginNickname = (String) session.getAttribute("loginNickname");
+
+        // 세션에 저장된 사용자의 정보를 불러옴
+        MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
+        String loginNickname = userData.getNickname();
         System.out.println(loginNickname + "님의 서재");
 
         // 로그인 상태 확인 _ 세션에 등록된 사용자가 아닌 경우

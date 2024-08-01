@@ -1,6 +1,7 @@
 package BookMind.GraduationProject_BE.Controller;
 
 import BookMind.GraduationProject_BE.DTO.EmailRequest;
+import BookMind.GraduationProject_BE.DTO.MemberDTO;
 import BookMind.GraduationProject_BE.DTO.NicknameRequest;
 import BookMind.GraduationProject_BE.DTO.PasswordRequest;
 import BookMind.GraduationProject_BE.Service.ValidationService;
@@ -47,12 +48,15 @@ public class ValidationController {
     public ResponseEntity<?> checkingPassword(HttpSession session, @RequestBody PasswordRequest passwordRequest) {
         String inputPassword = passwordRequest.getCurrentPassword();
         // 1. 현재 사용자의 비밀번호 정보를 받아옴
-        String userPassword = (String) session.getAttribute("loginPassword");
+        MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
+        String userPassword = userData.getPassword();
 
         // 2. 사용자가 입력한 비밀번호와 현재 사용자의 비밀번호의 일치 여부를 확인
         if (inputPassword.equals(userPassword)) {
+            System.out.println("비밀번호가 일치합니다.");
             return ResponseEntity.ok("비밀번호가 일치합니다.");
         } else {
+            System.out.println("비밀번호가 일치하지 않습니다.");
             return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
         }
     }
