@@ -25,6 +25,14 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
+    // ID로 책 정보 조회
+    @Transactional(readOnly = true)
+    public BookDTO getBookById(Long id) {
+        return bookRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElse(null);
+    }
+
     @Transactional
     public BookDTO saveBook(BookDTO bookDTO){
         Book book = convertToEntity(bookDTO);
