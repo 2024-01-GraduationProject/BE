@@ -54,6 +54,7 @@ public class MyPageController {
     public ResponseEntity<?> save(HttpSession session, @RequestBody UpdateMemberDTO updateMemberDTO) {
         System.out.println("변경 요청된 정보:" + updateMemberDTO);
         Long userId = (Long) session.getAttribute("userId");
+        System.out.println("userId = " + userId);
 
         // 세션에 로그인 정보가 없을 때
         if (userId == null) {
