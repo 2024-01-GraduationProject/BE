@@ -2,15 +2,11 @@ package BookMind.GraduationProject_BE.DTO;
 
 import BookMind.GraduationProject_BE.Entity.Agreements;
 import BookMind.GraduationProject_BE.Entity.BookTaste;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @ToString
 public class MemberDTO {
