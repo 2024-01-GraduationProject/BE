@@ -18,7 +18,7 @@ public class Book {
     private String author;
     private String publisher;
     private String publicationDate;
-    //private String genre;
+    private String category;
     private String summary;
     private String coverImageUrl;
 

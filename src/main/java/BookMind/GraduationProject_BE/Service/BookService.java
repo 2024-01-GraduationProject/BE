@@ -64,7 +64,7 @@ public class BookService {
         bookDTO.setAuthor(book.getAuthor());
         bookDTO.setPublisher(book.getPublisher());
         bookDTO.setPublicationDate(book.getPublicationDate());
-        //bookDTO.setGenre(book.getGenre());
+        bookDTO.setCategory(book.getCategory());
         bookDTO.setSummary(book.getSummary());
         bookDTO.setCoverImageUrl(book.getCoverImageUrl());
         return bookDTO;
@@ -77,7 +77,7 @@ public class BookService {
         book.setAuthor(bookDTO.getAuthor());
         book.setPublisher(bookDTO.getPublisher());
         book.setPublicationDate(bookDTO.getPublicationDate());
-        //book.setGenre(bookDTO.getGenre());
+        book.setCategory(bookDTO.getCategory());
         book.setSummary(bookDTO.getSummary());
         book.setCoverImageUrl(bookDTO.getCoverImageUrl());
         return book;
