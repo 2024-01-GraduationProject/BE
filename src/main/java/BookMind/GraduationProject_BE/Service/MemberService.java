@@ -7,6 +7,7 @@ import BookMind.GraduationProject_BE.Entity.Agreements;
 import BookMind.GraduationProject_BE.Entity.BookTaste;
 import BookMind.GraduationProject_BE.Entity.Category;
 import BookMind.GraduationProject_BE.Entity.Member;
+import BookMind.GraduationProject_BE.Repository.BookTasteRepository;
 import BookMind.GraduationProject_BE.Repository.CategoryRepository;
 import BookMind.GraduationProject_BE.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final BookTasteRepository bookTasteRepository;
 
     // 회원 가입
     @Transactional
@@ -135,22 +137,25 @@ public class MemberService {
 
         // BookTaste 업데이트
         if (updateMemberDTO.getNewBookTaste() != null) {
+            // 기존 BookTaste 삭제
+            bookTasteRepository.deleteByMember(member); // 사용자의 BookTaste 삭제
+
             List<String> newBookTasteNames = updateMemberDTO.getNewBookTaste();
             List<BookTaste> newBookTasteList = new ArrayList<>();
 
             for (String tasteName : newBookTasteNames) {
-                // 각 카테고리 이름에 해당하는 Category 객체를 찾아야 함
                 Category category = categoryRepository.findByCategory(tasteName); // 카테고리 이름으로 조회
 
                 if (category != null) {
-                    BookTaste bookTaste = new BookTaste();
-                    bookTaste.setMember(member); // Member와의 관계 설정
-                    bookTaste.setCategory(category); // Category와의 관계 설정
-                    newBookTasteList.add(bookTaste);
+                    BookTaste newBookTaste = new BookTaste();
+                    newBookTaste.setMember(member); // Member 설정
+                    newBookTaste.setCategory(category); // Category 설정
+                    newBookTasteList.add(newBookTaste);
                 }
             }
 
-            member.setBookTaste(newBookTasteList); // Member 엔티티에 BookTaste 리스트 설정
+            // 새로운 BookTaste 리스트 저장
+            member.setBookTaste(newBookTasteList); // Member 엔티티에 새로운 BookTaste 리스트 설정
         }
 
         // Agreements 중 EventAlarm만 업데이트

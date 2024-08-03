@@ -1,5 +1,6 @@
 package BookMind.GraduationProject_BE.Controller;
 
+import BookMind.GraduationProject_BE.DTO.CategoryDTO;
 import BookMind.GraduationProject_BE.Entity.Age;
 import BookMind.GraduationProject_BE.Entity.Category;
 import BookMind.GraduationProject_BE.Entity.Gender;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,9 +44,14 @@ public class DataController {
     }
     // 책 카테고리 데이터를 조회
     @GetMapping("/categories")
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
+        // Category 객체를 CategoryDTO로 변환하여 반환
+        List<CategoryDTO> categoryDTOs = categories.stream()
+                .map(category -> new CategoryDTO(category.getCategoryId(), category.getCategory()))
+                .collect(Collectors.toList());
+
         System.out.println("책 카테고리 데이터 불러오기 성공");
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
     }
 }
