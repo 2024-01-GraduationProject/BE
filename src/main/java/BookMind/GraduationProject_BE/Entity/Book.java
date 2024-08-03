@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 @Getter
 @Setter
 
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //PK
+    private Long book_id; //PK
 
     private String title;
     private String author;
@@ -21,5 +21,13 @@ public class Book {
     //private String genre;
     private String summary;
     private String coverImageUrl;
+
+    public Long getId(){
+        return book_id;
+    }
+
+    public void setId(Long book_id){
+        this.book_id = book_id;
+    }
 
 }

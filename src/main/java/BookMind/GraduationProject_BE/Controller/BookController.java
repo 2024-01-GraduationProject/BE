@@ -27,7 +27,7 @@ public class BookController {
     }
 
     // 책 상세 정보 조회
-    @GetMapping("/books/{id}")
+    @GetMapping("/books/{book_id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id){
         BookDTO book = bookService.getBookById(id);
         if (book != null) {
