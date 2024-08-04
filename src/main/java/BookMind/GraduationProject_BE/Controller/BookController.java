@@ -27,13 +27,18 @@ public class BookController {
     }
 
     // 책 상세 정보 조회
-    @GetMapping("/books/{book_id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id){
-        BookDTO book = bookService.getBookById(id);
-        if (book != null) {
-            return ResponseEntity.ok(book);
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/{book_id}")
+    public ResponseEntity<BookDTO> getBookById(@PathVariable("book_id") Long bookId){
+        try {
+            BookDTO book = bookService.getBookById(bookId);
+            if (book != null) {
+                return ResponseEntity.ok(book);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
