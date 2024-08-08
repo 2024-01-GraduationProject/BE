@@ -20,6 +20,7 @@ public class Book {
     private String publicationDate;
     private String category;
     private String summary;
+    private String content;
     private String coverImageUrl;
 
     public Long getId(){

@@ -66,6 +66,7 @@ public class BookService {
         bookDTO.setPublicationDate(book.getPublicationDate());
         bookDTO.setCategory(book.getCategory());
         bookDTO.setSummary(book.getSummary());
+        bookDTO.setContent(book.getContent());
         bookDTO.setCoverImageUrl(book.getCoverImageUrl());
         return bookDTO;
     }
@@ -79,6 +80,7 @@ public class BookService {
         book.setPublicationDate(bookDTO.getPublicationDate());
         book.setCategory(bookDTO.getCategory());
         book.setSummary(bookDTO.getSummary());
+        book.setContent(bookDTO.getContent());
         book.setCoverImageUrl(bookDTO.getCoverImageUrl());
         return book;
     }

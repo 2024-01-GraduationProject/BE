@@ -17,6 +17,7 @@ public class BookDTO {
     private String publicationDate;
     private String category;
     private String summary;
+    private String content;
     private String coverImageUrl;
 
 
@@ -74,6 +75,14 @@ public class BookDTO {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getCoverImageUrl() {
