@@ -67,7 +67,7 @@ public class BookController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentType(MediaType.parseMediaType("application/epub+zip"))
                 .contentLength(file.length())
                 .body(resource);
     }
