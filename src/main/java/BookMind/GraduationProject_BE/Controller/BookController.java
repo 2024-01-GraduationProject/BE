@@ -58,15 +58,22 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
 
+        // 파일 경로 및 존재 확인
         File file = new File(book.getContent());
-
         if (!file.exists()) {
+            System.err.println("File not found: " + file.getAbsolutePath());
             return ResponseEntity.notFound().build();
         }
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
+        // 파일 읽기 권한 확인
+        if (!file.canRead()) {
+            System.err.println("Cannot read file: " + file.getAbsolutePath());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+        // 파일을 읽어서 반환
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
                 .contentType(MediaType.parseMediaType("application/epub+zip"))
                 .contentLength(file.length())
                 .body(resource);
