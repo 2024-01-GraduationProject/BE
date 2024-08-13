@@ -36,8 +36,8 @@ public class BookmarkService {
     }
 
     // 즐겨찾기 목록 조회
-    public List<BookmarkDTO> getUserBookmarks(Long userId) {
-        return bookmarkRepository.findAllByUserId(userId).stream()
+    public List<BookmarkDTO> getUserBookmarks(Long userbookId) {
+        return bookmarkRepository.findAllByUserbookId(userbookId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

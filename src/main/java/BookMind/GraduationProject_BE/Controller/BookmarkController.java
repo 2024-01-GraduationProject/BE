@@ -25,11 +25,12 @@ public class BookmarkController {
     }
 
     // 마이페이지에서 즐겨찾기한 책 목록 조회
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookmarkDTO>> getUserBookmarks(@PathVariable Long userId) {
-        List<BookmarkDTO> bookmarks = bookmarkService.getUserBookmarks(userId);
+    @GetMapping("/user/{userbookId}")
+    public ResponseEntity<List<BookmarkDTO>> getUserBookmarks(@PathVariable Long userbookId) {
+        List<BookmarkDTO> bookmarks = bookmarkService.getUserBookmarks(userbookId);
         return ResponseEntity.ok(bookmarks);
     }
+
 
 
 }
