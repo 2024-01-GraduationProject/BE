@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -59,7 +60,12 @@ public class BookController {
         }
 
         // 파일 경로 및 존재 확인
-        File file = new File(book.getContent());
+        String basePath = Paths.get("BE", "src", "main", "resources").toString();
+        String relativeFilePath = book.getContent();
+        File file = new File(basePath, relativeFilePath);
+
+        //File file = new File(book.getContent());
+
         if (!file.exists()) {
             System.err.println("File not found: " + file.getAbsolutePath());
             return ResponseEntity.notFound().build();
