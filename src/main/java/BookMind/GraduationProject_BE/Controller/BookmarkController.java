@@ -2,12 +2,15 @@ package BookMind.GraduationProject_BE.Controller;
 
 import BookMind.GraduationProject_BE.DTO.BookmarkDTO;
 import BookMind.GraduationProject_BE.Entity.Bookmark;
+import BookMind.GraduationProject_BE.Entity.UserBook;
+import BookMind.GraduationProject_BE.Repository.UserBookRepository;
 import BookMind.GraduationProject_BE.Service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/bookmarks")
@@ -15,6 +18,15 @@ import java.util.List;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
+    private final UserBookRepository userBookRepository;
+
+    // userbookId 조회
+    @GetMapping("/userbook")
+    public ResponseEntity<Long> getUserbookId(@RequestParam Long userId, @RequestParam Long bookId) {
+        UserBook userBook = userBookRepository.findByUserIdAndBookId(userId, bookId)
+                .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
+        return ResponseEntity.ok(userBook.getUserbookId());
+    }
 
     // 책을 즐겨찾기에 추가
     @PostMapping("/addBook")
