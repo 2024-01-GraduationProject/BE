@@ -42,6 +42,16 @@ public class BookmarkService {
                 .collect(Collectors.toList());
     }
 
+    // 즐겨찾기 해제
+    public void removeBookmark(Long userbookId) {
+        // 해당 userbookId에 해당하는 즐겨찾기 항목 찾기
+        Bookmark bookmark = bookmarkRepository.findByUserbookId(userbookId)
+                .orElseThrow(() -> new NoSuchElementException("Bookmark not found"));
+
+        // 해당 즐겨찾기 항목 삭제
+        bookmarkRepository.delete(bookmark);
+    }
+
     private BookmarkDTO convertToDTO(Bookmark bookmark) {
         UserBook userBook = userBookRepository.findById(bookmark.getUserbookId())
                 .orElseThrow(() -> new NoSuchElementException("UserBook not found"));

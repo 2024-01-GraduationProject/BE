@@ -31,6 +31,12 @@ public class BookmarkController {
         return ResponseEntity.ok(bookmarks);
     }
 
+    // 책을 즐겨찾기에서 제거
+    @DeleteMapping("/remove")
+    public ResponseEntity<Void> removeBookmark(@RequestParam Long userbookId) {
+        bookmarkService.removeBookmark(userbookId);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
