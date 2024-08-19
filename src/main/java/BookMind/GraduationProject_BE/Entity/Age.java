@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Age {
 
     @Id
-    private String age_id;  // PK
+    private String ageId;  // PK
 
     private String age;
 }
