@@ -26,10 +26,10 @@ public class UserBook {
 
     private Boolean favorite = false;
     private int lastReadPage = 0;
-    private Date startDate;
-    private Date endDate;
+    private Date startDate = null;
+    private Date endDate = null;
 
-    private Byte rating;
+    private Byte rating = null;
 
     @PrePersist
     public void prePersist(){

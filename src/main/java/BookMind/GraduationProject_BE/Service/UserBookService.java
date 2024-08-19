@@ -18,6 +18,7 @@ public class UserBookService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserBookService.class);
 
+    // 책을 독서 중 상태로 추가
     public UserBook addBookToShelf(Long userId, Long bookId) {
         logger.info("사용자 ID: {}, 책 ID: {}을 독서 중으로 추가", userId, bookId);
 
@@ -30,9 +31,16 @@ public class UserBookService {
                     newUserBook.setUserId(userId);
                     newUserBook.setBookId(bookId);
                     newUserBook.setStatus(UserBook.Status.READING);
+                    // 기본값 설정
+                    newUserBook.setFavorite(false);
+                    newUserBook.setLastReadPage(0);
+                    newUserBook.setStartDate(null);
+                    newUserBook.setEndDate(null);
+                    newUserBook.setRating(null);
                     return userBookRepository.save(newUserBook);
                 });
-        logger.info("UserBook 엔티티 확인. UserBook ID: {}", userBook.getUserbookId());
+
+        logger.info("UserBook 생성 또는 조회 성공. UserBook ID: {}", userBook.getUserbookId());
         return userBook;
     }
 

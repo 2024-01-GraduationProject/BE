@@ -19,12 +19,17 @@ public class UserBookController {
 
     private final UserBookService userBookService;
 
-    @PostMapping("/addBook")
+    // 책을 독서 중 상태로 추가
+    @PostMapping("/add-to-reading")
     public ResponseEntity<UserBook> addBookToShelf(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId) {
         logger.info("책을 독서 중 목록에 추가: userId: {}, bookId: {}", userId, bookId);
-        UserBook userBook = userBookService.addBookToShelf(userId, bookId);
-
-        return ResponseEntity.ok(userBook);
+        try {
+            UserBook userBook = userBookService.addBookToShelf(userId, bookId);
+            return ResponseEntity.ok(userBook);
+        } catch (Exception e) {
+            logger.error("독서 중 목록 추가 실패: {}", e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @GetMapping("/reading")
