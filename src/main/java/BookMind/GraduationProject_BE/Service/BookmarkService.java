@@ -43,7 +43,6 @@ public class BookmarkService {
                     newUserBook.setUserbookId(userbookId);
                     newUserBook.setUserId(userId);
                     newUserBook.setBookId(bookId);
-                    newUserBook.setStatus(UserBook.Status.READING);
                     return userBookRepository.save(newUserBook);
                 });
 
