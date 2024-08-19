@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserBookRepository extends JpaRepository<UserBook, Long> {
+public interface UserBookRepository extends JpaRepository<UserBook, String> {
     Optional<UserBook> findByUserIdAndBookId(Long userId, Long bookId);
 }

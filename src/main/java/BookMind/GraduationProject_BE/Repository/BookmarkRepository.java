@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
-    List<Bookmark> findAllByUserbookId(Long userbookId);
+    List<Bookmark> findAllByUserbookId(String userbookId);
 
-    Optional<Bookmark> findByUserbookId(Long userbookId);
+    Optional<Bookmark> findByUserbookId(String userbookId);
 }
