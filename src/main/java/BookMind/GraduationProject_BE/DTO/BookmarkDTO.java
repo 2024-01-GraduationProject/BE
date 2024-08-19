@@ -10,7 +10,7 @@ import lombok.Setter;
 public class BookmarkDTO {
 
     private Long bookmarkId;
-    private Long userbookId;
+    private String userbookId;
     private Long bookId;
     private String title;
     private String author;

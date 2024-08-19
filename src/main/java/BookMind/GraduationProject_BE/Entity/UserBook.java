@@ -16,8 +16,7 @@ import java.sql.Timestamp;
 public class UserBook {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userbookId;
+    private String userbookId;
 
     private Long userId;
     private Long bookId;
@@ -31,6 +30,13 @@ public class UserBook {
     private Date endDate;
 
     private Byte rating;
+
+    @PrePersist
+    public void prePersist(){
+        if (this.userbookId == null) {
+            this.userbookId = userId + "-" + bookId;
+        }
+    }
 
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
