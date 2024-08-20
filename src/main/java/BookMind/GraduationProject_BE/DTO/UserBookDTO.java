@@ -7,9 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookmarkDTO {
+public class UserBookDTO {
 
-    private Long bookmarkId;
     private String userbookId;
     private Long bookId;
     private String title;
