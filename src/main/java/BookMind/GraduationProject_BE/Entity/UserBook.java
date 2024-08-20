@@ -47,4 +47,12 @@ public class UserBook {
     public enum Status {
         READING, COMPLETED
     }
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
 }

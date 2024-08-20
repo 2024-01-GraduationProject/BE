@@ -43,8 +43,15 @@ public class BookmarkService {
                     newUserBook.setUserbookId(userbookId);
                     newUserBook.setUserId(userId);
                     newUserBook.setBookId(bookId);
+                    newUserBook.setFavorite(true); // 즐겨찾기만 추가
                     return userBookRepository.save(newUserBook);
                 });
+
+        // 이미 존재하는 UserBook이라면, favorite만 업데이트
+        if (!userBook.getFavorite()) {
+            userBook.setFavorite(true);
+            userBookRepository.save(userBook);
+        }
 
         logger.info("UserBook 엔터티 확인. UserBook ID: {}", userBook.getUserbookId());
 
@@ -61,6 +68,19 @@ public class BookmarkService {
     // 즐겨찾기 목록 조회
     public List<BookmarkDTO> getUserBookmarks(String userbookId) {
         logger.info("UserBook ID: {}에 대한 즐겨찾기 목록을 조회.", userbookId);
+
+        // UserBook 엔터티 확인
+        UserBook userBook = userBookRepository.findById(userbookId)
+                .orElseThrow(() -> {
+                    logger.error("UserBook ID: {}에 대한 정보를 찾을 수 없습니다.", userbookId);
+                    return new NoSuchElementException("UserBook not found");
+                });
+
+        if (!userBook.getFavorite()) {
+            logger.info("UserBook ID: {}는 즐겨찾기 목록에 포함되지 않음.", userbookId);
+            return List.of();  // 빈 목록 반환
+        }
+
         List<BookmarkDTO> bookmarks = bookmarkRepository.findAllByUserbookId(userbookId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -72,13 +92,20 @@ public class BookmarkService {
     public void removeBookmark(String userbookId) {
         logger.info("UserBook ID: {}에 대한 즐겨찾기 해제.", userbookId);
 
-        Bookmark bookmark = bookmarkRepository.findByUserbookId(userbookId)
+        UserBook userBook = userBookRepository.findById(userbookId)
                 .orElseThrow(() -> {
-                    logger.error("UserBook ID: {}에 대한 즐겨찾기를 찾을 수 없습니다.", userbookId);
-                    return new NoSuchElementException("Bookmark not found");
+                    logger.error("UserBook ID: {}에 대한 정보를 찾을 수 없습니다.", userbookId);
+                    return new NoSuchElementException("UserBook not found");
                 });
 
-        bookmarkRepository.delete(bookmark);
+        // favorite 값을 false로 설정
+        userBook.setFavorite(false);
+        userBookRepository.save(userBook);
+
+        // Bookmark 엔터티 삭제
+        bookmarkRepository.findByUserbookId(userbookId)
+                .ifPresent(bookmarkRepository::delete);
+
         logger.info("UserBook ID: {}에 대한 즐겨찾기 삭제 성공.", userbookId);
     }
 
