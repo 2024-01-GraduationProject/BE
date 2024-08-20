@@ -4,16 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "AGE") // 테이블 이름이 "AGE"임을 명시
 @Getter
 @Setter
-public class Age {
+@NoArgsConstructor
+public class BookCategoryConnection {
 
     @Id
-    private String ageId;  // PK
+    private Long bcId;
 
-    private String age;
+    private Long bookId;
+    private String categoryId;
+
 }
