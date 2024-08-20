@@ -22,7 +22,7 @@ public class UserBook {
     private Long bookId;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = null; // 기본값을 null로 설정
 
     private Boolean favorite = false;
     private int lastReadPage = 0;

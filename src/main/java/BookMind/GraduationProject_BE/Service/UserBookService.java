@@ -38,6 +38,7 @@ public class UserBookService {
                     newUserBook.setUserId(userId);
                     newUserBook.setBookId(bookId);
                     newUserBook.setFavorite(true); // 즐겨찾기만 추가
+                    newUserBook.setStatus(null); // 상태를 설정하지 않음
                     return userBookRepository.save(newUserBook);
                 });
 
