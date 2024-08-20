@@ -96,15 +96,20 @@ public class UserBookService {
                     newUserBook.setUserbookId(userbookId);
                     newUserBook.setUserId(userId);
                     newUserBook.setBookId(bookId);
-                    newUserBook.setStatus(UserBook.Status.READING);
+                    newUserBook.setStatus(UserBook.Status.READING); // 독서 중 상태 설정
                     // 기본값 설정
-                    newUserBook.setFavorite(false);
                     newUserBook.setLastReadPage(0);
                     newUserBook.setStartDate(null);
                     newUserBook.setEndDate(null);
                     newUserBook.setRating(null);
                     return userBookRepository.save(newUserBook);
                 });
+
+        // 이미 존재하는 UserBook이 있을 때 상태를 READING으로 업데이트
+        if (userBook.getStatus() == null || !userBook.getStatus().equals(UserBook.Status.READING)) {
+            userBook.setStatus(UserBook.Status.READING);
+            userBookRepository.save(userBook);
+        }
 
         logger.info("UserBook 생성 또는 조회 성공. UserBook ID: {}", userBook.getUserbookId());
         return userBook;
