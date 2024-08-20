@@ -85,4 +85,11 @@ public class BookController {
                 .body(resource);
     }
 
+
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<List<Book>> getBooksByCategory(@PathVariable String categoryName) {
+        List<Book> books = bookService.getBooksByCategoryName(categoryName);
+        return ResponseEntity.ok(books);
+    }
+
 }

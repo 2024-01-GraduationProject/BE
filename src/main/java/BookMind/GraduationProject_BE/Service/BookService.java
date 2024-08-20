@@ -56,6 +56,12 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
+    // 카테고리 별 책 분류
+    public List<Book> getBooksByCategoryName(String category) {
+        return bookRepository.findBooksByCategoryName(category);
+    }
+
+
     private BookDTO convertToDTO(Book book) {
         // DTO 변환 로직
         BookDTO bookDTO = new BookDTO();
