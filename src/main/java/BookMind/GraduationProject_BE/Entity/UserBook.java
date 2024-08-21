@@ -22,14 +22,14 @@ public class UserBook {
     private Long bookId;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = null; // 기본값을 null로 설정
 
     private Boolean favorite = false;
     private int lastReadPage = 0;
-    private Date startDate;
-    private Date endDate;
+    private Date startDate = null;
+    private Date endDate = null;
 
-    private Byte rating;
+    private Byte rating = null;
 
     @PrePersist
     public void prePersist(){
@@ -46,5 +46,13 @@ public class UserBook {
 
     public enum Status {
         READING, COMPLETED
+    }
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
     }
 }

@@ -7,9 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookmarkDTO {
+public class UserBookDTO {
 
-    private Long bookmarkId;
     private String userbookId;
     private Long bookId;
     private String title;
@@ -23,4 +22,12 @@ public class BookmarkDTO {
     private String startDate; // 시작일
     private String endDate; // 완료일
     private Byte rating; // 평점
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
 }

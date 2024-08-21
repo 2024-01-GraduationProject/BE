@@ -33,28 +33,12 @@ public class BookService {
                 .orElse(null);
     }
 
-    @Transactional
-    public BookDTO saveBook(BookDTO bookDTO){
-        Book book = convertToEntity(bookDTO);
-        book = bookRepository.save(book);
-        return convertToDTO(book);
+
+    // 카테고리 별 책 분류
+    public List<Book> getBooksByCategoryName(String category) {
+        return bookRepository.findBooksByCategoryName(category);
     }
 
-    @Transactional
-    public BookDTO updateBook(BookDTO bookDTO){
-        Optional<Book> book = bookRepository.findById(bookDTO.getId());
-        if (book.isPresent()) {
-            Book updatedBook = convertToEntity(bookDTO);
-            return convertToDTO(bookRepository.save(updatedBook));
-        } else {
-            throw new NoSuchElementException("No book found with the given ID.");
-        }
-    }
-
-    @Transactional
-    public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
-    }
 
     private BookDTO convertToDTO(Book book) {
         // DTO 변환 로직
