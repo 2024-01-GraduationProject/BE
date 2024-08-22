@@ -3,6 +3,7 @@ package BookMind.GraduationProject_BE.Controller;
 import BookMind.GraduationProject_BE.DTO.BookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Service.BookService;
+import BookMind.GraduationProject_BE.Service.SearchService;
 import lombok.RequiredArgsConstructor; // Lombok을 사용한 생성자 자동 주입
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -25,6 +26,9 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private SearchService searchService;
 
     // 모든 책 목록 조회
     @GetMapping
@@ -85,11 +89,19 @@ public class BookController {
                 .body(resource);
     }
 
-
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<List<Book>> getBooksByCategory(@PathVariable String categoryName) {
         List<Book> books = bookService.getBooksByCategoryName(categoryName);
         return ResponseEntity.ok(books);
+    }
+
+    // 검색어를 통한 도서 조회
+    @GetMapping("/search")
+    public ResponseEntity<List<BookDTO>> searchBooks(@RequestParam Object searchWord) {
+        System.out.println("searchWord = " + searchWord);
+        List<BookDTO> searchResults = searchService.searchBooks(searchWord);
+        System.out.println("searchResults = " + searchResults);
+        return ResponseEntity.ok(searchResults);
     }
 
 }
