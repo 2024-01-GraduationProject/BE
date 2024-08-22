@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+
+import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -86,8 +88,8 @@ public class UserBookService {
 
 
     // 책을 독서 중 상태로 추가
-    public UserBook addBookToShelf(Long userId, Long bookId) {
-        logger.info("사용자 ID: {}, 책 ID: {}을 독서 중으로 추가", userId, bookId);
+    public UserBook addBookToShelf(Long userId, Long bookId, Date startDate) {
+        logger.info("사용자 ID: {}, 책 ID: {}을 독서 중으로 추가. 시작 날짜: {}", userId, bookId, startDate);
 
         String userbookId = userId + "-" + bookId;
 
@@ -100,7 +102,7 @@ public class UserBookService {
                     newUserBook.setStatus(UserBook.Status.READING); // 독서 중 상태 설정
                     // 기본값 설정
                     newUserBook.setLastReadPage(0);
-                    newUserBook.setStartDate(null);
+                    newUserBook.setStartDate(startDate);
                     newUserBook.setEndDate(null);
                     newUserBook.setRating(null);
                     return userBookRepository.save(newUserBook);
