@@ -62,7 +62,7 @@ public class DataController {
         return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
     }
 
-    // 추천시스템 전처리 데이터 > Flask 서버로 반환
+    // 추천시스템 전처리 데이터 >> Flask 서버로 반환
     @GetMapping("/preprocess")
     public ResponseEntity<Map<String, Object>> getPreprocessData(HttpSession session) {
         // 데이터 전처리
