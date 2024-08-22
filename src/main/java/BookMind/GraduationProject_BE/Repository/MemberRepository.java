@@ -25,4 +25,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 회원 조회 _ 특정 닉네임을 갖는 Member 엔티티 조회
     Optional<Member> findByNickname(String nickname);
+
+    // 회원 리스트 조회 _ 특정 연령대와 성별에 해당하는 Member 엔티티 조회
+    List<Member> findByAgeAndGender(String age, String gender);
 }

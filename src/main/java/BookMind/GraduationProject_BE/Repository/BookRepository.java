@@ -16,4 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     // 도서 제목, 저자, 출판사, 카테고리, 줄거리, 출판날짜로 도서 조회하기
     List<Book> findByTitleContainingOrAuthorContainingOrPublisherContainingOrCategoryContainingOrSummaryContainingOrPublicationDateContaining(
             String title, String author, String publisher, String category, String summary, String publicaionDate);
+
+    // 여러 개의 bookIds를 통해서 Book 조회
+    List<Book> findByBook_idIn(List<Long> bookIds);
 }
