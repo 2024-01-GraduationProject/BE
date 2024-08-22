@@ -47,13 +47,13 @@ public class RecommendService {
                                         .collect(Collectors.toList());
 
         // 5. bookIds로 Books 테이블에서 도서를 조회
-        List<Book> books = bookRepository.findByBook_idIn(bookIds);
+        List<Book> books = bookRepository.findByBookIdIn(bookIds);
 
         // 6. books를 BookDTO로 변환
         List<BookDTO> bookDTOs = books.stream()
                                         .map(book -> {
                                             BookDTO bookDTO = new BookDTO();
-                                            bookDTO.setBook_id(book.getBook_id());
+                                            bookDTO.setBookId(book.getBookId());
                                             bookDTO.setTitle(book.getTitle());
                                             bookDTO.setAuthor(book.getAuthor());
                                             bookDTO.setPublisher(book.getPublisher());

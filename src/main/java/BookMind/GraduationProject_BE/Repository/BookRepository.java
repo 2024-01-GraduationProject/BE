@@ -18,5 +18,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             String title, String author, String publisher, String category, String summary, String publicaionDate);
 
     // 여러 개의 bookIds를 통해서 Book 조회
-    List<Book> findByBook_idIn(List<Long> bookIds);
+    List<Book> findByBookIdIn(List<Long> bookIds);
 }

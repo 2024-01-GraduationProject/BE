@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long book_id; //PK
+    private Long bookId; //PK
 
     private String title;
     private String author;
@@ -24,11 +24,11 @@ public class Book {
     private String coverImageUrl;
 
     public Long getId(){
-        return book_id;
+        return bookId;
     }
 
-    public void setId(Long book_id){
-        this.book_id = book_id;
+    public void setId(Long bookId){
+        this.bookId = bookId;
     }
 
 }
