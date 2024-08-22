@@ -53,10 +53,32 @@ public class MemberService {
     // 회원가입 중인 사용자에 연령, 성별 및 도서 취향 정보 추가 등록
     @Transactional
     public Member saveTaste(InformationAndTasteDTO informationAndTasteDTO) {
-        Optional<Member> members = memberRepository.findByEmail(informationAndTasteDTO.getEmail());
-        if (members.isPresent()) {
-            Member member = members.get();
-            memberRepository.saveInformationAndTaste(member, informationAndTasteDTO);
+        Optional<Member> memberOptional = memberRepository.findByEmail(informationAndTasteDTO.getEmail());
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+
+            // Member 엔티티에 InformationAndTasteDTO 정보 설정
+            member.setAge(informationAndTasteDTO.getAge()); // 연령 설정
+            member.setGender(informationAndTasteDTO.getGender()); // 성별 설정
+
+            // BookTaste 정보를 Member 엔티티에 설정
+            List<String> bookTasteNames = informationAndTasteDTO.getBookTaste();
+            List<BookTaste> bookTasteList = new ArrayList<>();
+
+            // 각 카테고리 이름에 해당하는 Category 객체를 찾아야 함
+            for (String tasteName : bookTasteNames) {
+                Category category = categoryRepository.findByCategory(tasteName); // 카테고리 이름으로 조회
+                if (category != null) {
+                    BookTaste bookTaste = new BookTaste();
+                    bookTaste.setMember(member); // Member와의 관계 설정
+                    bookTaste.setCategory(category); // Category와의 관계 설정
+                    bookTasteList.add(bookTaste);
+                }
+            }
+
+            member.setBookTaste(bookTasteList); // 도서 취향 설정
+
+            // 변경된 회원 정보 저장
             memberRepository.save(member);
             return member;
         } else {
