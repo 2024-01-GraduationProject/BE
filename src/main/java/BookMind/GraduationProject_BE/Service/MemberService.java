@@ -11,6 +11,7 @@ import BookMind.GraduationProject_BE.Repository.BookTasteRepository;
 import BookMind.GraduationProject_BE.Repository.CategoryRepository;
 import BookMind.GraduationProject_BE.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +27,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
 
+    @Autowired
     private final MemberRepository memberRepository;
+    @Autowired
     private final CategoryRepository categoryRepository;
+    @Autowired
     private final BookTasteRepository bookTasteRepository;
 
     // 회원 가입
