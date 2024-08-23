@@ -101,7 +101,7 @@ public class UserBookService {
                     newUserBook.setBookId(bookId);
                     newUserBook.setStatus(UserBook.Status.READING); // 독서 중 상태 설정
                     // 기본값 설정
-                    newUserBook.setLastReadPage(0);
+                    newUserBook.setLastReadPage(0.0f); // 초기 진도율 설정
                     newUserBook.setStartDate(startDate);
                     newUserBook.setEndDate(null);
                     newUserBook.setRating(null);
@@ -128,14 +128,20 @@ public class UserBookService {
         return userBookRepository.findAllByUserIdAndStatus(userId, UserBook.Status.COMPLETED);
     }
 
-    public void markAsCompleted(Long userId, Long bookId) {
+    public void markAsCompleted(Long userId, Long bookId, float lastReadPage) {
         logger.info("사용자 ID: {}, 책 ID: {}을 독서 완료로 변경", userId, bookId);
         String userbookId = userId + "-" + bookId;
         UserBook userBook = userBookRepository.findById(userbookId)
                 .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
 
-        userBook.setStatus(UserBook.Status.COMPLETED);
-        userBook.setEndDate(new java.sql.Date(System.currentTimeMillis()));
+        userBook.setLastReadPage(lastReadPage);
+
+        // 진도율이 100일 경우 상태를 COMPLETED로 변경
+        if (lastReadPage >= 100.0f) {
+            userBook.setStatus(UserBook.Status.COMPLETED);
+            userBook.setEndDate(new java.sql.Date(System.currentTimeMillis()));
+        }
+
         userBookRepository.save(userBook);
         logger.info("독서 완료로 변경 성공: {}", userbookId);
     }

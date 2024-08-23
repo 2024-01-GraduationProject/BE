@@ -5,6 +5,7 @@ import BookMind.GraduationProject_BE.Service.UserBookService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class UserBookController {
 
     // 책을 독서 중 상태로 추가
     @PostMapping("/add-to-reading")
-    public ResponseEntity<UserBook> addBookToShelf(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId, @RequestParam("startDate") java.sql.Date startDate) {
+    public ResponseEntity<UserBook> addBookToShelf(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId, @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") java.sql.Date startDate) {
         logger.info("책을 독서 중 목록에 추가: userId: {}, bookId: {}", userId, bookId);
         try {
             UserBook userBook = userBookService.addBookToShelf(userId, bookId, startDate);
@@ -51,11 +52,15 @@ public class UserBookController {
     }
 
     @PutMapping("/completeBook")
-    public ResponseEntity<Void> markAsCompleted(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId) {
+    public ResponseEntity<Void> markAsCompleted(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId, @RequestParam("lastReadPage") float lastReadPage) {
         logger.info("책을 독서 완료로 표시: userId: {}, bookId: {}", userId, bookId);
 
-        userBookService.markAsCompleted(userId, bookId);
-
-        return ResponseEntity.noContent().build();
+        try {
+            userBookService.markAsCompleted(userId, bookId, lastReadPage);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            logger.error("진도율 업데이트 실패: {}", e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
     }
 }
