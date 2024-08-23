@@ -25,8 +25,8 @@ public class BookDTO {
         return bookId;
     }
 
-    public void setId(Long book_id){
-        this.bookId = book_id;
+    public void setId(Long bookId){
+        this.bookId = bookId;
     }
 
     public String getAuthor() {
