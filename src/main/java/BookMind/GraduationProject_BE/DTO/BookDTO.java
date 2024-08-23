@@ -10,7 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class BookDTO {
-    private Long book_id;
+    private Long bookId;
     private String title;
     private String author;
     private String publisher;
@@ -22,11 +22,11 @@ public class BookDTO {
 
 
     public Long getId(){
-        return book_id;
+        return bookId;
     }
 
-    public void setId(Long book_id){
-        this.book_id = book_id;
+    public void setId(Long bookId){
+        this.bookId = bookId;
     }
 
     public String getAuthor() {

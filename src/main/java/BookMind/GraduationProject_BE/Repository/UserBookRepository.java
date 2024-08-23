@@ -1,5 +1,7 @@
 package BookMind.GraduationProject_BE.Repository;
 
+import BookMind.GraduationProject_BE.DTO.BookDTO;
+import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Entity.UserBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +16,7 @@ public interface UserBookRepository extends JpaRepository<UserBook, String> {
     List<UserBook> findAllByUserIdAndStatus(Long userId, UserBook.Status status);
 
     List<UserBook> findAllByUserIdAndFavoriteTrue(Long userId);
+
+    // 여러 개의 userId를 통해서 UserBook 조회
+    List<UserBook> findByUserIdIn(List<Long> userIds);
 }
