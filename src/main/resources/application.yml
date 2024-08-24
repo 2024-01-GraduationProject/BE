@@ -18,7 +18,20 @@ spring:
 logging:
   level:
     root: info
+    org.springframework.security: debug
     org.hibernate.sql: debug
     org.hibernate.orm.jdbc.bind: trace
+# Google OAuth2 client Setting
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 372266635969-39mh3lljq3olvach38dq0kues7hf03mk.apps.googleusercontent.com
+#            client-secret: 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
+#            scope:
+#              - email
+#              - profile
+#            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
 
 
