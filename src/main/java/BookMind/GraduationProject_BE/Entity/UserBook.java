@@ -25,7 +25,7 @@ public class UserBook {
     private Status status = null; // 기본값을 null로 설정
 
     private Boolean favorite = false;
-    private int lastReadPage = 0;
+    private float lastReadPage = 0.0f; // float으로 변경
     private Date startDate = null;
     private Date endDate = null;
 
