@@ -12,7 +12,6 @@ import BookMind.GraduationProject_BE.Repository.CategoryRepository;
 import BookMind.GraduationProject_BE.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,32 +126,6 @@ public class MemberService {
             return null;
         }
     }
-
-    // ******* 간편로그인 (구글) ******* >> 변경 필요 <<
-//    public String googleLogin(OAuth2User principal) {
-//        // 구글 로그인한 사용자 정보를 가져옴.
-//        String name = principal.getAttribute("name");
-//        String email = principal.getAttribute("email");
-//
-//        // 이메일로 이미 존재하는 사용자인지 확인
-//        Optional<Member> existingMember = memberRepository.findByEmail(email);
-//        if (existingMember == null) {
-//            // 새로운 사용자일 경우 Member 테이블에 저장
-//            Member member = new Member();
-//            member.setNickname(name);
-//            member.setEmail(email);
-//            // 개인정보 동의는 자동, 이벤트 알림은 off로 설정
-//            Agreements agreements = new Agreements();
-//            agreements.setPersonalInfo(true);
-//            agreements.setEventAlarm(false);
-//            member.setAgreements(agreements);
-//            member.setLoginMethod("Google로 회원가입");
-//            memberRepository.save(member);
-//            return "join by google"; // 새로운 사용자 메시지
-//        } else {
-//            return "login by google"; // 기존 사용자 메시지
-//        }
-//    }
 
 //    // 로그인 (보안 및 가독성을 높인 버전 *** 추후 수정)
 //    // 비밀번호 해싱 관련 사항 고려할 것
