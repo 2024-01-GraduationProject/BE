@@ -22,9 +22,10 @@ public class UserBookController {
 
     // 책을 독서 중 상태로 추가
     @PostMapping("/add-to-reading")
-    public ResponseEntity<UserBook> addBookToShelf(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId, @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") java.sql.Date startDate) {
+    public ResponseEntity<UserBook> addBookToShelf(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId, @RequestParam("startDate") String startDateStr) {
         logger.info("책을 독서 중 목록에 추가: userId: {}, bookId: {}", userId, bookId);
         try {
+            java.sql.Date startDate = java.sql.Date.valueOf(startDateStr);
             UserBook userBook = userBookService.addBookToShelf(userId, bookId, startDate);
             return ResponseEntity.ok(userBook);
         } catch (Exception e) {
