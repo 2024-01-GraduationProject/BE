@@ -128,13 +128,18 @@ public class UserBookService {
         return userBookRepository.findAllByUserIdAndStatus(userId, UserBook.Status.COMPLETED);
     }
 
-    public void markAsCompleted(Long userId, Long bookId, float lastReadPage) {
+    // 진도율 업데이트 및 인덱스 추가 기능
+    public void markAsCompleted(Long userId, Long bookId, float lastReadPage, List<Float> indices) {
         logger.info("사용자 ID: {}, 책 ID: {}을 독서 완료로 변경", userId, bookId);
         String userbookId = userId + "-" + bookId;
         UserBook userBook = userBookRepository.findById(userbookId)
                 .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
 
+        // 진도율 업데이트
         userBook.setLastReadPage(lastReadPage);
+
+        // 인덱스 리스트 업데이트
+        userBook.getIndexPages().addAll(indices.stream().distinct().collect(Collectors.toList()));
 
         // 진도율이 100일 경우 상태를 COMPLETED로 변경
         if (lastReadPage >= 100.0f) {

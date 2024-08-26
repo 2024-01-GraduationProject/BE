@@ -8,8 +8,11 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Table(name = "user_book")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,8 +31,13 @@ public class UserBook {
     private float lastReadPage = 0.0f; // float으로 변경
     private Date startDate = null;
     private Date endDate = null;
-
     private Byte rating = null;
+
+    @ElementCollection
+    @CollectionTable(name = "userbook_indices", joinColumns = @JoinColumn(name = "userbook_id"))
+    @Column(name = "index_page")
+    private List<Float> indexPages = new ArrayList<>();
+
 
     @PrePersist
     public void prePersist(){

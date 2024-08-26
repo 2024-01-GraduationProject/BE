@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,11 +54,20 @@ public class UserBookController {
     }
 
     @PutMapping("/completeBook")
-    public ResponseEntity<Void> markAsCompleted(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId, @RequestParam("lastReadPage") float lastReadPage) {
+    public ResponseEntity<Void> markAsCompleted(
+            @RequestParam("userId") Long userId,
+            @RequestParam("bookId") Long bookId,
+            @RequestParam("lastReadPage") float lastReadPage,
+            @RequestParam(value = "indices", required = false) List<Float> indices) {
         logger.info("책을 독서 완료로 표시: userId: {}, bookId: {}", userId, bookId);
 
         try {
-            userBookService.markAsCompleted(userId, bookId, lastReadPage);
+            // 인덱스 리스트가 null일 경우 빈 리스트로 초기화
+            if (indices == null) {
+                indices = new ArrayList<>();
+            }
+
+            userBookService.markAsCompleted(userId, bookId, lastReadPage, indices);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             logger.error("진도율 업데이트 실패: {}", e.getMessage());
