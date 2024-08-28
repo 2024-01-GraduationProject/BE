@@ -1,9 +1,14 @@
 package BookMind.GraduationProject_BE.Service;
 
+import BookMind.GraduationProject_BE.DTO.SimpleBookDTO;
+import BookMind.GraduationProject_BE.DTO.SimpleUserBookDTO;
+import BookMind.GraduationProject_BE.DTO.UserBookDTO;
+import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Entity.BookCategoryConnection;
 import BookMind.GraduationProject_BE.Entity.BookTaste;
 import BookMind.GraduationProject_BE.Entity.UserBook;
 import BookMind.GraduationProject_BE.Repository.BookCategoryConnectionRepository;
+import BookMind.GraduationProject_BE.Repository.BookRepository;
 import BookMind.GraduationProject_BE.Repository.BookTasteRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,8 @@ public class DataPreprocessingService {
     private BookCategoryConnectionRepository bookCategoryConnectionRepository;
     @Autowired
     private BookTasteRepository bookTasteRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     public List<Map<String, Object>> preprocessData() {
         // 1단계: userBook과 bookCategoryConnection 병합하여 category_id 찾기
@@ -76,11 +83,40 @@ public class DataPreprocessingService {
 
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("user_id", userId);
-            resultMap.put("one_hot_encoding", oneHotVector);
+            resultMap.put("category_id", oneHotVector);
             finalResult.add(resultMap);
         }
 
         return finalResult;
     }
+
+    // userBook 데이터에서 user_id와 book_id만 추출
+    public List<SimpleUserBookDTO> getUserBook() {
+        List<UserBook> userBooks = userBookRepository.findAll();
+        return userBooks.stream()
+                .map(userBook -> {
+                    SimpleUserBookDTO userBookDTO = new SimpleUserBookDTO();
+                    userBookDTO.setUserId(userBook.getUserId());
+                    userBookDTO.setBookId(userBook.getBookId());
+                    // 나머지 필드는 설정하지 않음
+                    return userBookDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Book 데이터에서 book_id와 title만 추출
+    public List<SimpleBookDTO> getBook() {
+        List<Book> books = bookRepository.findAll();
+        return books.stream()
+                .map(book -> {
+                    SimpleBookDTO bookDTO = new SimpleBookDTO();
+                    bookDTO.setBookId(book.getBookId());
+                    bookDTO.setTitle(book.getTitle());
+                    // 나머지 필드는 설정하지 않음
+                    return bookDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
 }
 
