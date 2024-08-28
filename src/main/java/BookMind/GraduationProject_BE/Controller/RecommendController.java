@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,11 +74,19 @@ public class RecommendController {
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers); // HTTP 요청을 구성하는 객체
 
         // Flask API 호출
-        ResponseEntity<Map> responseEntity = restTemplate.exchange(flaskUrl, HttpMethod.POST, requestEntity, Map.class);
-        Map<String, Object> recommendBooks = responseEntity.getBody();
+        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(
+                flaskUrl,
+                HttpMethod.POST,
+                requestEntity,
+                new ParameterizedTypeReference<List<Map<String, Object>>>() {}
+        );
+        List<Map<String, Object>> recommendBooks = responseEntity.getBody();
 
         // 추천된 bookId를 받아서 books 테이블에서 찾기
-        List<Long> bookIds = (List<Long>) recommendBooks.get("book_ids"); // book_ids는 Flask에서 반환되는 키
+        List<Long> bookIds = recommendBooks.stream()
+                .map(b -> Long.valueOf((Integer) ((Map<String, Object>) b).get("bookId"))) // bookId는 Flask에서 반환되는 키
+                .collect(Collectors.toList());
+
         List<BookDTO> recommendations = bookService.findBooksByIds(bookIds);
 
         // Flask로부터 받은 추천 결과를 프론트엔드에 반환
