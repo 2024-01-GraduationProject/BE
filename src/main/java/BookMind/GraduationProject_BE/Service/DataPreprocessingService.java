@@ -55,35 +55,15 @@ public class DataPreprocessingService {
             userCategoryMap.computeIfAbsent(userId, k -> new ArrayList<>()).add(categoryId);
         }
 
-        // 3단계: 카테고리의 고유한 인덱스 생성
-        Set<String> uniqueCategories = userCategoryMap.values().stream()
-                .flatMap(List::stream)
-                .collect(Collectors.toSet());
-
-        Map<String, Integer> categoryIndexMap = new HashMap<>();
-        int index = 0;
-        for (String category : uniqueCategories) {
-            categoryIndexMap.put(category, index++);
-        }
-
-        // 4단계: 원-핫 인코딩 적용
+        // 3단계: 최종 결과 생성
         List<Map<String, Object>> finalResult = new ArrayList<>();
         for (Map.Entry<Long, List<String>> entry : userCategoryMap.entrySet()) {
             Long userId = entry.getKey();
             List<String> combinedCategoryIds = new ArrayList<>(new HashSet<>(entry.getValue())); // 중복 제거
 
-            // 원-핫 인코딩 벡터 생성
-            int[] oneHotVector = new int[categoryIndexMap.size()];
-            for (String categoryId : combinedCategoryIds) {
-                Integer categoryIdx = categoryIndexMap.get(categoryId);
-                if (categoryIdx != null) {
-                    oneHotVector[categoryIdx] = 1;
-                }
-            }
-
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("user_id", userId);
-            resultMap.put("category_id", oneHotVector);
+            resultMap.put("combined_category_id", combinedCategoryIds); // 추가된 부분
             finalResult.add(resultMap);
         }
 
