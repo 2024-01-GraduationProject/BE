@@ -3,7 +3,9 @@ package BookMind.GraduationProject_BE.Service;
 import BookMind.GraduationProject_BE.DTO.UserBookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Entity.UserBook;
+import BookMind.GraduationProject_BE.Entity.UserBookIndices;
 import BookMind.GraduationProject_BE.Repository.BookRepository;
+import BookMind.GraduationProject_BE.Repository.UserBookIndicesRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ public class UserBookService {
 
     private final UserBookRepository userBookRepository;
     private final BookRepository bookRepository;
+    private final UserBookIndicesRepository userBookIndicesRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserBookService.class);
 
@@ -128,6 +131,23 @@ public class UserBookService {
         return userBookRepository.findAllByUserIdAndStatus(userId, UserBook.Status.COMPLETED);
     }
 
+    // 저장된 인덱스 및 마지막 읽은 페이지 조회
+    public UserBookDTO getReadingProgress(Long userId, Long bookId) {
+        logger.info("사용자 ID: {}, 책 ID: {}의 읽기 진행 상태 조회", userId, bookId);
+        String userbookId = userId + "-" + bookId;
+        UserBook userBook = userBookRepository.findById(userbookId)
+                .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
+
+        List<Float> indexPages = userBookIndicesRepository.findAllByUserbookId(userbookId).stream()
+                .map(UserBookIndices::getIndexPage)
+                .collect(Collectors.toList());
+
+        UserBookDTO dto = convertToDTO(userBook);
+        dto.setIndexPages(indexPages);
+
+        return dto;
+    }
+
     // 진도율 업데이트 및 인덱스 추가 기능
     public void markAsCompleted(Long userId, Long bookId, float lastReadPage, List<Float> indices) {
         logger.info("사용자 ID: {}, 책 ID: {}을 독서 완료로 변경", userId, bookId);
@@ -139,7 +159,11 @@ public class UserBookService {
         userBook.setLastReadPage(lastReadPage);
 
         // 인덱스 리스트 업데이트
-        userBook.getIndexPages().addAll(indices.stream().distinct().collect(Collectors.toList()));
+        for (Float index : indices) {
+            if (!userBookIndicesRepository.existsByUserbookIdAndIndexPage(userbookId, index)) {
+                userBookIndicesRepository.save(new UserBookIndices(userbookId, index));
+            }
+        }
 
         // 진도율이 100일 경우 상태를 COMPLETED로 변경
         if (lastReadPage >= 100.0f) {
@@ -167,6 +191,12 @@ public class UserBookService {
         dto.setStartDate(userBook.getStartDate() != null ? userBook.getStartDate().toString() : null);
         dto.setEndDate(userBook.getEndDate() != null ? userBook.getEndDate().toString() : null);
         dto.setRating(userBook.getRating());
+        // 인덱스 리스트 설정
+        List<Float> indexPages = userBookIndicesRepository.findAllByUserbookId(userBook.getUserbookId())
+                .stream()
+                .map(UserBookIndices::getIndexPage)
+                .collect(Collectors.toList());
+        dto.setIndexPages(indexPages);
 
         return dto;
     }
