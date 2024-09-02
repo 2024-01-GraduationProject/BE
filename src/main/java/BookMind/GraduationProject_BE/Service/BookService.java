@@ -41,6 +41,14 @@ public class BookService {
         return bookRepository.findBooksByCategoryName(category);
     }
 
+    // bookId들로 책 리스트 조회
+    public List<BookDTO> findBooksByIds(List<Long> bookIds) {
+        List<Book> books = bookRepository.findByBookIdIn(bookIds);
+        List<BookDTO> bookDTOs = books.stream()
+                                        .map(this::convertToDTO).collect(Collectors.toList());
+
+        return bookDTOs;
+    }
 
     private BookDTO convertToDTO(Book book) {
         // DTO 변환 로직

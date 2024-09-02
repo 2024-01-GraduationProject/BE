@@ -12,10 +12,11 @@ import BookMind.GraduationProject_BE.Service.DataPreprocessingService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +33,6 @@ public class DataController {
     private final GenderRepository genderRepository;
     @Autowired
     private final CategoryRepository categoryRepository;
-    @Autowired
-    private final DataPreprocessingService dataPreprocessingService;
 
     // 연령 데이터를 조회
     @GetMapping("/ages")
@@ -60,27 +59,5 @@ public class DataController {
 
         System.out.println("책 카테고리 데이터 불러오기 성공");
         return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
-    }
-
-    // 추천시스템 전처리 데이터 >> Flask 서버로 반환
-    @GetMapping("/preprocess")
-    public ResponseEntity<Map<String, Object>> getPreprocessData(HttpSession session) {
-        // 데이터 전처리
-        List<Map<String, Object>> data = dataPreprocessingService.preprocessData();
-
-        // 세션 정보 확인
-        System.out.println("Session ID: " + session.getId());
-
-        // 세션에 저장된 userId를 불러옴
-        MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
-        Long userId = userData.getUserId();
-
-        // 반환할 데이터 준비
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", data);
-        response.put("userId", userId);
-
-        // 현재 사용자의 userId와 전처리된 데이터를 JSON 형식으로 반환
-        return ResponseEntity.ok(response);
     }
 }

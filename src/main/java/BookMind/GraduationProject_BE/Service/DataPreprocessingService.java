@@ -1,9 +1,14 @@
 package BookMind.GraduationProject_BE.Service;
 
+import BookMind.GraduationProject_BE.DTO.SimpleBookDTO;
+import BookMind.GraduationProject_BE.DTO.SimpleUserBookDTO;
+import BookMind.GraduationProject_BE.DTO.UserBookDTO;
+import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Entity.BookCategoryConnection;
 import BookMind.GraduationProject_BE.Entity.BookTaste;
 import BookMind.GraduationProject_BE.Entity.UserBook;
 import BookMind.GraduationProject_BE.Repository.BookCategoryConnectionRepository;
+import BookMind.GraduationProject_BE.Repository.BookRepository;
 import BookMind.GraduationProject_BE.Repository.BookTasteRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +26,8 @@ public class DataPreprocessingService {
     private BookCategoryConnectionRepository bookCategoryConnectionRepository;
     @Autowired
     private BookTasteRepository bookTasteRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     public List<Map<String, Object>> preprocessData() {
         // 1단계: userBook과 bookCategoryConnection 병합하여 category_id 찾기
@@ -48,39 +55,48 @@ public class DataPreprocessingService {
             userCategoryMap.computeIfAbsent(userId, k -> new ArrayList<>()).add(categoryId);
         }
 
-        // 3단계: 카테고리의 고유한 인덱스 생성
-        Set<String> uniqueCategories = userCategoryMap.values().stream()
-                .flatMap(List::stream)
-                .collect(Collectors.toSet());
-
-        Map<String, Integer> categoryIndexMap = new HashMap<>();
-        int index = 0;
-        for (String category : uniqueCategories) {
-            categoryIndexMap.put(category, index++);
-        }
-
-        // 4단계: 원-핫 인코딩 적용
+        // 3단계: 최종 결과 생성
         List<Map<String, Object>> finalResult = new ArrayList<>();
         for (Map.Entry<Long, List<String>> entry : userCategoryMap.entrySet()) {
             Long userId = entry.getKey();
             List<String> combinedCategoryIds = new ArrayList<>(new HashSet<>(entry.getValue())); // 중복 제거
 
-            // 원-핫 인코딩 벡터 생성
-            int[] oneHotVector = new int[categoryIndexMap.size()];
-            for (String categoryId : combinedCategoryIds) {
-                Integer categoryIdx = categoryIndexMap.get(categoryId);
-                if (categoryIdx != null) {
-                    oneHotVector[categoryIdx] = 1;
-                }
-            }
-
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("user_id", userId);
-            resultMap.put("one_hot_encoding", oneHotVector);
+            resultMap.put("combined_category_id", combinedCategoryIds); // 추가된 부분
             finalResult.add(resultMap);
         }
 
         return finalResult;
     }
+
+    // userBook 데이터에서 user_id와 book_id만 추출
+    public List<SimpleUserBookDTO> getUserBook() {
+        List<UserBook> userBooks = userBookRepository.findAll();
+        return userBooks.stream()
+                .map(userBook -> {
+                    SimpleUserBookDTO userBookDTO = new SimpleUserBookDTO();
+                    userBookDTO.setUserId(userBook.getUserId());
+                    userBookDTO.setBookId(userBook.getBookId());
+                    // 나머지 필드는 설정하지 않음
+                    return userBookDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Book 데이터에서 book_id와 title만 추출
+    public List<SimpleBookDTO> getBook() {
+        List<Book> books = bookRepository.findAll();
+        return books.stream()
+                .map(book -> {
+                    SimpleBookDTO bookDTO = new SimpleBookDTO();
+                    bookDTO.setBookId(book.getBookId());
+                    bookDTO.setTitle(book.getTitle());
+                    // 나머지 필드는 설정하지 않음
+                    return bookDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
 }
 
