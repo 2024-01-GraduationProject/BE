@@ -13,11 +13,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserBookIndices {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "userbook_id")
     private String userbookId;
+
+    @Column(name = "index_page")
     private float indexPage;
 
     public UserBookIndices(String userbookId, float indexPage) {
