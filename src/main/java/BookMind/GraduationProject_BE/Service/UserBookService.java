@@ -7,6 +7,7 @@ import BookMind.GraduationProject_BE.Entity.UserBookIndices;
 import BookMind.GraduationProject_BE.Repository.BookRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookIndicesRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +139,8 @@ public class UserBookService {
         UserBook userBook = userBookRepository.findById(userbookId)
                 .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
 
-        List<Float> indexPages = userBookIndicesRepository.findAllByUserbookId(userbookId).stream()
+        // 수정된 레포지토리 메서드 사용
+        List<Float> indexPages = userBookIndicesRepository.findAllByUserBook(userBook).stream()
                 .map(UserBookIndices::getIndexPage)
                 .collect(Collectors.toList());
 
@@ -149,6 +151,7 @@ public class UserBookService {
     }
 
     // 진도율 업데이트 및 인덱스 추가 기능
+    @Transactional
     public void markAsCompleted(Long userId, Long bookId, float lastReadPage, List<Float> indices) {
         logger.info("사용자 ID: {}, 책 ID: {}을 독서 완료로 변경", userId, bookId);
         String userbookId = userId + "-" + bookId;
@@ -160,8 +163,10 @@ public class UserBookService {
 
         // 인덱스 리스트 업데이트
         for (Float index : indices) {
-            if (!userBookIndicesRepository.existsByUserbookIdAndIndexPage(userbookId, index)) {
-                userBookIndicesRepository.save(new UserBookIndices(userbookId, index));
+            if (!userBookIndicesRepository.existsByUserBookAndIndexPage(userBook, index)) {
+                UserBookIndices newIndex = new UserBookIndices(userBook, index);
+                userBook.getIndexPages().add(newIndex);  // UserBook의 리스트에 추가
+                userBookIndicesRepository.save(newIndex);  // 인덱스 저장
             }
         }
 
@@ -174,6 +179,7 @@ public class UserBookService {
         userBookRepository.save(userBook);
         logger.info("독서 완료로 변경 성공: {}", userbookId);
     }
+
 
     private UserBookDTO convertToDTO(UserBook userBook) {
         Book book = bookRepository.findById(userBook.getBookId())
@@ -192,7 +198,7 @@ public class UserBookService {
         dto.setEndDate(userBook.getEndDate() != null ? userBook.getEndDate().toString() : null);
         dto.setRating(userBook.getRating());
         // 인덱스 리스트 설정
-        List<Float> indexPages = userBookIndicesRepository.findAllByUserbookId(userBook.getUserbookId())
+        List<Float> indexPages = userBookIndicesRepository.findAllByUserBook(userBook)
                 .stream()
                 .map(UserBookIndices::getIndexPage)
                 .collect(Collectors.toList());

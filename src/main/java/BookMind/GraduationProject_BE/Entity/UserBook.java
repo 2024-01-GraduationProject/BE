@@ -33,7 +33,7 @@ public class UserBook {
     private Date endDate = null;
     private Byte rating = null;
 
-    @OneToMany(mappedBy = "userbookId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userBook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserBookIndices> indexPages = new ArrayList<>();
 
     @PrePersist

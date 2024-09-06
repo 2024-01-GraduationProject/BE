@@ -18,14 +18,15 @@ public class UserBookIndices {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "userbook_id")
-    private String userbookId;
+    @ManyToOne
+    @JoinColumn(name = "userbook_id")
+    private UserBook userBook;
 
     @Column(name = "index_page")
     private float indexPage;
 
-    public UserBookIndices(String userbookId, float indexPage) {
-        this.userbookId = userbookId;
+    public UserBookIndices(UserBook userBook, float indexPage) {
+        this.userBook = userBook;
         this.indexPage = indexPage;
     }
 }
