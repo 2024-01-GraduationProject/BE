@@ -24,9 +24,10 @@ public class GPTService {
                     .header("Content-Type", "application/json")
                     .body(new JSONObject()
                             .put("model", "text-davinci-003")
-                            .put("prompt", "책 '" + bookTitle + "'에 대해 독자가 생각해볼만한 질문을 생성해줘.")
+                            .put("prompt", "책 '" + bookTitle + "'에 대해 독자가 생각해볼만한 질문을 하나만 한국어로 생성해줘.")
                             .put("max_tokens", 100)
                             .put("temperature", 0.7)
+                            .put("n", 1)
                             .toString())
                     .asJson();
 
