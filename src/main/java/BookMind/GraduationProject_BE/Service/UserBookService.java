@@ -26,6 +26,7 @@ public class UserBookService {
     private final UserBookRepository userBookRepository;
     private final BookRepository bookRepository;
     private final UserBookIndicesRepository userBookIndicesRepository;
+    private final GPTService gptService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserBookService.class);
 
@@ -174,10 +175,20 @@ public class UserBookService {
         if (lastReadPage >= 100.0f) {
             userBook.setStatus(UserBook.Status.COMPLETED);
             userBook.setEndDate(new java.sql.Date(System.currentTimeMillis()));
+            logger.info("독서 완료로 변경 성공: {}", userbookId);
+
+            // 독서 완료 후 GPT 질문 생성
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new NoSuchElementException("책을 찾을 수 없습니다."));
+
+            String question = gptService.generateQuestion(book.getTitle());
+
+            // "부기"가 사용자에게 질문하는 로직 추가
+            System.out.println("부기가 사용자에게 질문합니다: " + question);
         }
 
         userBookRepository.save(userBook);
-        logger.info("독서 완료로 변경 성공: {}", userbookId);
+
     }
 
 
