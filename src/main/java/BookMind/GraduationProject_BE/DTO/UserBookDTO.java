@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,6 +24,7 @@ public class UserBookDTO {
     private String startDate; // 시작일
     private String endDate; // 완료일
     private Byte rating; // 평점
+    private List<Float> indexPages; // 인덱스 리스트
 
     public Boolean getFavorite() {
         return favorite;

@@ -33,11 +33,8 @@ public class UserBook {
     private Date endDate = null;
     private Byte rating = null;
 
-    @ElementCollection
-    @CollectionTable(name = "userbook_indices", joinColumns = @JoinColumn(name = "userbook_id"))
-    @Column(name = "index_page")
-    private List<Float> indexPages = new ArrayList<>();
-
+    @OneToMany(mappedBy = "userBook", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserBookIndices> indexPages = new ArrayList<>();
 
     @PrePersist
     public void prePersist(){

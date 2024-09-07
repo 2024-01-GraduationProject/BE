@@ -1,11 +1,11 @@
 package BookMind.GraduationProject_BE.Controller;
 
+import BookMind.GraduationProject_BE.DTO.UserBookDTO;
 import BookMind.GraduationProject_BE.Entity.UserBook;
 import BookMind.GraduationProject_BE.Service.UserBookService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,13 +53,25 @@ public class UserBookController {
         return ResponseEntity.ok(completedBooks);
     }
 
+    // 책 진행 상태 조회
+    @GetMapping("/progress")
+    public ResponseEntity<UserBookDTO> getReadingProgress(@RequestParam("userId") Long userId, @RequestParam("bookId") Long bookId) {
+        logger.info("책 진행 상태 조회: userId: {}, bookId: {}", userId, bookId);
+        try {
+            UserBookDTO progress = userBookService.getReadingProgress(userId, bookId);
+            return ResponseEntity.ok(progress);
+        } catch (Exception e) {
+            logger.error("책 진행 상태 조회 실패: {}", e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
     @PutMapping("/completeBook")
     public ResponseEntity<Void> markAsCompleted(
             @RequestParam("userId") Long userId,
             @RequestParam("bookId") Long bookId,
             @RequestParam("lastReadPage") float lastReadPage,
             @RequestParam(value = "indices", required = false) List<Float> indices) {
-        logger.info("책을 독서 완료로 표시: userId: {}, bookId: {}", userId, bookId);
 
         try {
             // 인덱스 리스트가 null일 경우 빈 리스트로 초기화
@@ -68,6 +80,7 @@ public class UserBookController {
             }
 
             userBookService.markAsCompleted(userId, bookId, lastReadPage, indices);
+            logger.info("책을 독서 완료로 표시: userId: {}, bookId: {}", userId, bookId);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             logger.error("진도율 업데이트 실패: {}", e.getMessage());

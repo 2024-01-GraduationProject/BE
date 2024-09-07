@@ -65,7 +65,7 @@ public class BookController {
         }
 
         // 파일 경로 및 존재 확인
-        String basePath = Paths.get("BE", "src", "main", "resources", "static").toString();
+        String basePath = Paths.get("src", "main", "resources", "static").toString();
         String relativeFilePath = book.getContent();
         File file = new File(basePath, relativeFilePath);
 

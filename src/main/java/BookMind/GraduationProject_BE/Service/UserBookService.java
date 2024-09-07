@@ -3,8 +3,11 @@ package BookMind.GraduationProject_BE.Service;
 import BookMind.GraduationProject_BE.DTO.UserBookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Entity.UserBook;
+import BookMind.GraduationProject_BE.Entity.UserBookIndices;
 import BookMind.GraduationProject_BE.Repository.BookRepository;
+import BookMind.GraduationProject_BE.Repository.UserBookIndicesRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,8 @@ public class UserBookService {
 
     private final UserBookRepository userBookRepository;
     private final BookRepository bookRepository;
+    private final UserBookIndicesRepository userBookIndicesRepository;
+    private final GPTService gptService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserBookService.class);
 
@@ -128,7 +133,26 @@ public class UserBookService {
         return userBookRepository.findAllByUserIdAndStatus(userId, UserBook.Status.COMPLETED);
     }
 
+    // 저장된 인덱스 및 마지막 읽은 페이지 조회
+    public UserBookDTO getReadingProgress(Long userId, Long bookId) {
+        logger.info("사용자 ID: {}, 책 ID: {}의 읽기 진행 상태 조회", userId, bookId);
+        String userbookId = userId + "-" + bookId;
+        UserBook userBook = userBookRepository.findById(userbookId)
+                .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
+
+        // 수정된 레포지토리 메서드 사용
+        List<Float> indexPages = userBookIndicesRepository.findAllByUserBook(userBook).stream()
+                .map(UserBookIndices::getIndexPage)
+                .collect(Collectors.toList());
+
+        UserBookDTO dto = convertToDTO(userBook);
+        dto.setIndexPages(indexPages);
+
+        return dto;
+    }
+
     // 진도율 업데이트 및 인덱스 추가 기능
+    @Transactional
     public void markAsCompleted(Long userId, Long bookId, float lastReadPage, List<Float> indices) {
         logger.info("사용자 ID: {}, 책 ID: {}을 독서 완료로 변경", userId, bookId);
         String userbookId = userId + "-" + bookId;
@@ -139,17 +163,34 @@ public class UserBookService {
         userBook.setLastReadPage(lastReadPage);
 
         // 인덱스 리스트 업데이트
-        userBook.getIndexPages().addAll(indices.stream().distinct().collect(Collectors.toList()));
+        for (Float index : indices) {
+            if (!userBookIndicesRepository.existsByUserBookAndIndexPage(userBook, index)) {
+                UserBookIndices newIndex = new UserBookIndices(userBook, index);
+                userBook.getIndexPages().add(newIndex);  // UserBook의 리스트에 추가
+                userBookIndicesRepository.save(newIndex);  // 인덱스 저장
+            }
+        }
 
         // 진도율이 100일 경우 상태를 COMPLETED로 변경
         if (lastReadPage >= 100.0f) {
             userBook.setStatus(UserBook.Status.COMPLETED);
             userBook.setEndDate(new java.sql.Date(System.currentTimeMillis()));
+            logger.info("독서 완료로 변경 성공: {}", userbookId);
+
+            // 독서 완료 후 GPT 질문 생성
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new NoSuchElementException("책을 찾을 수 없습니다."));
+
+            String question = gptService.generateQuestion(book.getTitle());
+
+            // "부기"가 사용자에게 질문하는 로직 추가
+            System.out.println("부기가 사용자에게 질문합니다: " + question);
         }
 
         userBookRepository.save(userBook);
-        logger.info("독서 완료로 변경 성공: {}", userbookId);
+
     }
+
 
     private UserBookDTO convertToDTO(UserBook userBook) {
         Book book = bookRepository.findById(userBook.getBookId())
@@ -167,6 +208,12 @@ public class UserBookService {
         dto.setStartDate(userBook.getStartDate() != null ? userBook.getStartDate().toString() : null);
         dto.setEndDate(userBook.getEndDate() != null ? userBook.getEndDate().toString() : null);
         dto.setRating(userBook.getRating());
+        // 인덱스 리스트 설정
+        List<Float> indexPages = userBookIndicesRepository.findAllByUserBook(userBook)
+                .stream()
+                .map(UserBookIndices::getIndexPage)
+                .collect(Collectors.toList());
+        dto.setIndexPages(indexPages);
 
         return dto;
     }
