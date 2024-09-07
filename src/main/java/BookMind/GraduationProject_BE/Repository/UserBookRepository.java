@@ -4,6 +4,7 @@ import BookMind.GraduationProject_BE.DTO.BookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Entity.UserBook;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface UserBookRepository extends JpaRepository<UserBook, String> {
 
     // 여러 개의 userId를 통해서 UserBook 조회
     List<UserBook> findByUserIdIn(List<Long> userIds);
+
+    // DB 상에 가장 많이 저장된 book_id를 조회, Native Query 사용
+    @Query(value = "select book_id from UserBook group by book_id order by count(*) desc limit 4", nativeQuery = true)
+    List<Long> findMostReadBookIds();
 }

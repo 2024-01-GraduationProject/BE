@@ -3,6 +3,7 @@ package BookMind.GraduationProject_BE.Service;
 import BookMind.GraduationProject_BE.DTO.BookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Repository.BookRepository;
+import BookMind.GraduationProject_BE.Repository.UserBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class BookService {
 
     @Autowired
     private final BookRepository bookRepository;
+    @Autowired
+    private final UserBookRepository userBookRepository;
 
     @Transactional(readOnly = true)
     public List<BookDTO> findAllBooks(){
@@ -45,9 +48,22 @@ public class BookService {
     public List<BookDTO> findBooksByIds(List<Long> bookIds) {
         List<Book> books = bookRepository.findByBookIdIn(bookIds);
         List<BookDTO> bookDTOs = books.stream()
-                                        .map(this::convertToDTO).collect(Collectors.toList());
+                .map(this::convertToDTO).collect(Collectors.toList());
 
         return bookDTOs;
+    }
+
+    // (베스트 도서 조회) UserBook에서 추출한 bookId로 책 리스트 조회
+    public List<BookDTO> findBestBooksByIds() {
+        // 1. UserBook에서 도서 Id 받아오기
+        List<Long> bookIds = userBookRepository.findMostReadBookIds();
+        // 2. Book 테이블에서 도서 조회
+        List<Book> bestBooks = bookRepository.findByBookIdIn(bookIds);
+        // 3. BookDTO로 변환
+        List<BookDTO> bestBookDTOs = bestBooks.stream()
+                .map(this::convertToDTO).collect(Collectors.toList());
+
+        return bestBookDTOs;
     }
 
     private BookDTO convertToDTO(Book book) {

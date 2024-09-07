@@ -4,6 +4,7 @@ import BookMind.GraduationProject_BE.DTO.BookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
 import BookMind.GraduationProject_BE.Service.BookService;
 import BookMind.GraduationProject_BE.Service.SearchService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor; // Lombok을 사용한 생성자 자동 주입
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -104,4 +105,11 @@ public class BookController {
         return ResponseEntity.ok(searchResults);
     }
 
+    // 베스트 도서 조회
+    @GetMapping("/best")
+    public ResponseEntity<List<BookDTO>> bestBooks() {
+        List<BookDTO> best4Books = bookService.findBestBooksByIds();
+        System.out.println("best4Books = " + best4Books);
+        return ResponseEntity.ok(best4Books);
+    }
 }
