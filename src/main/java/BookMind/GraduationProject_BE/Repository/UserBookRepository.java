@@ -22,6 +22,6 @@ public interface UserBookRepository extends JpaRepository<UserBook, String> {
     List<UserBook> findByUserIdIn(List<Long> userIds);
 
     // DB 상에 가장 많이 저장된 book_id를 조회, Native Query 사용
-    @Query(value = "select book_id from UserBook group by book_id order by count(*) desc limit 4", nativeQuery = true)
+    @Query(value = "select book_id from user_book group by book_id order by count(*) desc limit 4", nativeQuery = true)
     List<Long> findMostReadBookIds();
 }
