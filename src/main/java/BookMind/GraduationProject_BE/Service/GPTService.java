@@ -3,6 +3,7 @@ package BookMind.GraduationProject_BE.Service;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,19 @@ public class GPTService {
     public String generateQuestion(String bookTitle) {
         try {
             // OpenAI API로 요청 보내기
-            HttpResponse<JsonNode> response = Unirest.post("https://api.openai.com/v1/completions")
+            HttpResponse<JsonNode> response = Unirest.post("https://api.openai.com/v1/chat/completions")
                     .header("Authorization", "Bearer " + openaiApiKey)
                     .header("Content-Type", "application/json")
                     .body(new JSONObject()
                             .put("model", "gpt-3.5-turbo")
-                            .put("prompt", "책 '" + bookTitle + "'에 대해 독자가 생각해볼만한 질문을 하나만 한국어로 생성해줘.")
+                            .put("messages", new JSONArray()
+                                    .put(new JSONObject()
+                                            .put("role", "user")
+                                            .put("content", "책 '" + bookTitle + "'에 대해 독자가 생각해볼 만한 질문을 하나만 한국어로 생성해줘.")
+                                    )
+                            )
                             .put("max_tokens", 100)
                             .put("temperature", 0.7)
-                            .put("n", 1)
                             .toString())
                     .asJson();
 
@@ -42,7 +47,8 @@ public class GPTService {
 
             // 응답에서 질문 추출
             String gptResponse = response.getBody().getObject()
-                    .getJSONArray("choices").getJSONObject(0).getString("text");
+                    .getJSONArray("choices").getJSONObject(0)
+                    .getJSONObject("message").getString("content");
 
             // 질문 확인용 출력
             System.out.println("받아온 질문: " + gptResponse);
