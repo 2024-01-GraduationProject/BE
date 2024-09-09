@@ -47,9 +47,10 @@ public class BoogiController {
     public ResponseEntity<String> handleAnswer(
             @RequestParam Long userId,
             @RequestBody String userAnswer,
-            @RequestParam String bookTitle) {
+            @RequestParam String bookTitle,
+            @RequestParam Long bookId) {
         // 답변 처리 + 필요시 DB에 저장
-        UserAnswerDTO answerDTO = new UserAnswerDTO(userId, null, userAnswer, LocalDateTime.now().toString());
+        UserAnswerDTO answerDTO = new UserAnswerDTO(userId, bookId, userAnswer, LocalDateTime.now().toString());
         saveAnswer(answerDTO);
 
         // 현재까지 질문한 갯수 가져옴
