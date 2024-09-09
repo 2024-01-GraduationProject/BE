@@ -90,9 +90,10 @@ public class BookController {
                 .body(resource);
     }
 
+    // 카테고리 별로 구분
     @GetMapping("/category/{categoryName}")
-    public ResponseEntity<List<Book>> getBooksByCategory(@PathVariable String categoryName) {
-        List<Book> books = bookService.getBooksByCategoryName(categoryName);
+    public ResponseEntity<List<BookDTO>> getBooksByCategory(@PathVariable String categoryName) {
+        List<BookDTO> books = bookService.getBooksByCategoryName(categoryName);
         return ResponseEntity.ok(books);
     }
 

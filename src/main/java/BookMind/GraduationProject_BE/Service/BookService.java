@@ -2,6 +2,8 @@ package BookMind.GraduationProject_BE.Service;
 
 import BookMind.GraduationProject_BE.DTO.BookDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
+import BookMind.GraduationProject_BE.Entity.BookCategoryConnection;
+import BookMind.GraduationProject_BE.Repository.BookCategoryConnectionRepository;
 import BookMind.GraduationProject_BE.Repository.BookRepository;
 import BookMind.GraduationProject_BE.Repository.UserBookRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class BookService {
     private final BookRepository bookRepository;
     @Autowired
     private final UserBookRepository userBookRepository;
+    @Autowired
+    private final BookCategoryConnectionRepository bookCategoryConnectionRepository;
 
     @Transactional(readOnly = true)
     public List<BookDTO> findAllBooks(){
@@ -40,8 +44,11 @@ public class BookService {
 
 
     // 카테고리 별 책 분류
-    public List<Book> getBooksByCategoryName(String category) {
-        return bookRepository.findBooksByCategoryName(category);
+    public List<BookDTO> getBooksByCategoryName(String categoryName) {
+        List<Book> books = bookRepository.findBooksByCategoryName(categoryName);
+        return books.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     // bookId들로 책 리스트 조회
