@@ -11,12 +11,14 @@ public class UserAnswerDTO {
 
     private Long userId;
     private Long bookId;
+    private String question;
     private String answer;
     private String createdAt;
 
-    public UserAnswerDTO(Long userId, Long bookId, String answer, String createdAt) {
+    public UserAnswerDTO(Long userId, Long bookId, String question, String answer, String createdAt) {
         this.userId = userId;
         this.bookId = bookId;
+        this.question = question;
         this.answer = answer;
         this.createdAt = createdAt;
     }

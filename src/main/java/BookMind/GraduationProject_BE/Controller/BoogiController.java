@@ -29,7 +29,7 @@ public class BoogiController {
 
     // 책 제목을 기반으로 질문을 생성
     @GetMapping("/ask-question/{userId}/{bookTitle}")
-    public ResponseEntity<String> askQuestion(@PathVariable Long userId, @RequestParam String bookTitle) {
+    public ResponseEntity<String> askQuestion(@PathVariable Long userId, @PathVariable String bookTitle) {
 
         String congratsMessage = "부기: 축하해! 책 '" + bookTitle + "'을 완독했어! 첫 번째 질문을 줄게.";
 
@@ -47,10 +47,11 @@ public class BoogiController {
     public ResponseEntity<String> handleAnswer(
             @RequestParam Long userId,
             @RequestBody String userAnswer,
+            @RequestParam String question,
             @RequestParam String bookTitle,
             @RequestParam Long bookId) {
         // 답변 처리 + 필요시 DB에 저장
-        UserAnswerDTO answerDTO = new UserAnswerDTO(userId, bookId, userAnswer, LocalDateTime.now().toString());
+        UserAnswerDTO answerDTO = new UserAnswerDTO(userId, bookId, question, userAnswer, LocalDateTime.now().toString());
         saveAnswer(answerDTO);
 
         // 현재까지 질문한 갯수 가져옴
@@ -98,6 +99,7 @@ public class BoogiController {
         UserAnswer userAnswer = new UserAnswer(
                 userAnswerDTO.getUserId(),
                 userAnswerDTO.getBookId(),
+                userAnswerDTO.getQuestion(),
                 userAnswerDTO.getAnswer()
         );
         userAnswerRepository.save(userAnswer);
@@ -115,6 +117,7 @@ public class BoogiController {
                 .map(answer -> new UserAnswerDTO(
                         answer.getUserId(),
                         answer.getBookId(),
+                        answer.getQuestion(),
                         answer.getAnswer(),
                         answer.getCreatedAt().toString()
                 ))
