@@ -31,7 +31,7 @@ public class BoogiController {
     @GetMapping("/ask-question/{userId}/{bookTitle}")
     public ResponseEntity<String> askQuestion(@PathVariable Long userId, @PathVariable String bookTitle) {
 
-        String congratsMessage = "부기: 축하해! 책 '" + bookTitle + "'을 완독했어! 첫 번째 질문을 줄게.";
+        String congratsMessage = " 축하해! 책 '" + bookTitle + "'을 완독했어! 첫 번째 질문을 줄게.";
 
         // 사용자 질문 세션 초기화
         userQuestionCount.put(userId, 1);
@@ -39,7 +39,7 @@ public class BoogiController {
 
         // 첫번째 질문 생성
         String firstQuestion = generateUniqueQuestion(userId, bookTitle);
-        return ResponseEntity.ok(congratsMessage + "\n부기: " + firstQuestion);
+        return ResponseEntity.ok(congratsMessage + "\n " + firstQuestion);
     }
 
     // 사용자의 답변 받음, 추가 질문 받을지 선택
@@ -59,10 +59,10 @@ public class BoogiController {
 
         if (currentQuestionCount >= 3) {
             // 3개의 질문을 모두 받았으면 종료 메시지
-            return ResponseEntity.ok("부기: 좋은 생각이야! 질문을 모두 마쳤어. 여기서 마치자.");
+            return ResponseEntity.ok(" 좋은 생각이야! 질문을 모두 마쳤어. 여기서 마치자.");
         } else {
             // 추가 질문을 받을지 선택
-            String prompt = "부기: 좋은 생각이야! 다음 질문을 더 받을래? '예' 또는 '아니오'로 대답해줘.";
+            String prompt = " 좋은 생각이야! 다음 질문을 더 받을래? '예' 또는 '아니오'로 대답해줘.";
             return ResponseEntity.ok(prompt);
         }
     }
@@ -79,17 +79,17 @@ public class BoogiController {
             int currentQuestionCount = userQuestionCount.getOrDefault(userId, 0);
 
             if (currentQuestionCount >= 3) {
-                return ResponseEntity.ok("부기: 질문을 모두 마쳤어. 여기서 마치자.");
+                return ResponseEntity.ok(" 질문을 모두 마쳤어. 여기서 마치자.");
             }
 
             // 추가 질문 생성
             String nextQuestion = gptService.generateQuestion(bookTitle);
             userQuestionCount.put(userId, currentQuestionCount + 1);
 
-            return ResponseEntity.ok("부기: " + nextQuestion);
+            return ResponseEntity.ok( nextQuestion);
         } else {
             // 사용자가 "NO"라고 답했을 경우
-            return ResponseEntity.ok("부기: 그럼 여기서 대화를 마칠게! 다음에 또 보자.");
+            return ResponseEntity.ok(" 그럼 여기서 대화를 마칠게! 다음에 또 보자.");
         }
     }
 
