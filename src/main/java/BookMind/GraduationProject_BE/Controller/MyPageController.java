@@ -29,8 +29,6 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("세션이 존재하지 않습니다. 로그인해 주세요.");
         }
-        // 세션 정보 확인
-        System.out.println("Session ID: " + session.getId());
 
         // 세션에 저장된 사용자의 정보를 불러옴
         MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
@@ -43,8 +41,6 @@ public class MyPageController {
         }
 
         // 정상적으로 로그인한 경우
-        System.out.println(loginNickname + "님의 마이페이지");
-        System.out.println("userData = " + userData);
         return ResponseEntity.ok(userData);
     }
 
@@ -56,7 +52,6 @@ public class MyPageController {
         // 로그인된 사용자 id 확인
         MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
         Long userId = userData.getUserId();
-        System.out.println("userId = " + userId);
 
         // 세션에 로그인 정보가 없을 때
         if (userId == null) {
@@ -71,7 +66,6 @@ public class MyPageController {
             // 세션에 저장된 사용자 정보 업데이트
             session.setAttribute("loginUser", updatedMemberDTO);
             System.out.println("회원정보가 업데이트 되었습니다.");
-            System.out.println("updatedMemberDTO = " + updatedMemberDTO);
             return ResponseEntity.ok(updatedMemberDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 저장 도중에 문제가 발생했습니다.");

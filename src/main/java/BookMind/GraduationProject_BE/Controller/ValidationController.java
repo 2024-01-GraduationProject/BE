@@ -53,10 +53,8 @@ public class ValidationController {
 
         // 2. 사용자가 입력한 비밀번호와 현재 사용자의 비밀번호의 일치 여부를 확인
         if (inputPassword.equals(userPassword)) {
-            System.out.println("비밀번호가 일치합니다.");
             return ResponseEntity.ok("비밀번호가 일치합니다.");
         } else {
-            System.out.println("비밀번호가 일치하지 않습니다.");
             return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
         }
     }

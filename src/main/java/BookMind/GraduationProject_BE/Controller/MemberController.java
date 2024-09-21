@@ -30,8 +30,6 @@ public class MemberController {
             // MemberDTO를 Member로 변환하는 로직은 서비스 계층에서 이루어짐
             // 그렇게 되면 컨트롤러는 순수하게 HTTP 요청과 응답만 처리 가능
             memberService.join(memberDTO); // 서비스 계층의 join 메서드 호출하여 회원가입 처리
-            System.out.println("memberController.save");
-            System.out.println("memberDTO = " + memberDTO);
             return ResponseEntity.ok("회원 정보가 성공적으로 저장되었습니다.");
         } catch (IllegalStateException e) { // 중복 회원 예외가 발생
             return ResponseEntity.status(409).body(e.getMessage());
@@ -44,9 +42,7 @@ public class MemberController {
     @PostMapping("/save-taste")
     public ResponseEntity<Member> updateMemberTaste(@RequestBody InformationAndTasteDTO informationAndTasteDTO) {
         try {
-            System.out.println("informationAndTasteDTO = " + informationAndTasteDTO);
             Member updatedMember = memberService.saveTaste(informationAndTasteDTO);
-            System.out.println("updatedMember = " + updatedMember);
             // 응답 상태 코드: 200으로 설정, 업데이트된 멤버 정보를 클라이언트에게 반환
             return ResponseEntity.status(HttpStatus.OK).body(updatedMember);
         } catch (NoSuchElementException e) {
@@ -64,8 +60,6 @@ public class MemberController {
             MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
             String userNickname = loginUser.getNickname();
             System.out.println(userNickname + "님 로그인 성공");
-            System.out.println("loginUser = " + loginUser);
-            System.out.println("Session ID: " + session.getId()); // session ID 출력
             return ResponseEntity.ok(loginResult); // 로그인 성공시 memberDTO 객체 반환
         } else {
             // login 실패
