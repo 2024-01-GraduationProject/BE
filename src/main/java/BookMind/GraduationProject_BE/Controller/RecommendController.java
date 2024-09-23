@@ -43,8 +43,6 @@ public class RecommendController {
     // 백 서버에서는 해당 도서들의 id를 바탕으로 books 테이블에서 도서들을 찾아서 프론트로 반환
     @GetMapping("/userTaste")
     public ResponseEntity<?> getRecommendations(HttpSession session) {
-        // 세션 정보 확인
-        System.out.println("Session ID: " + session.getId());
 
         //세션에 저장된 userId를 불러옴
         MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");
@@ -54,7 +52,6 @@ public class RecommendController {
         }
 
         Long userId = userData.getUserId();
-        System.out.println("userId = " + userId);
 
         // 데이터 전처리
         List<Map<String, Object>> data = dataPreprocessingService.preprocessData();
@@ -97,8 +94,6 @@ public class RecommendController {
     // 사용자와 같은 연령대와 성별인 사용자들의 독서 데이터를 바탕으로 추천
     @GetMapping("/ageAndGender")
     public ResponseEntity<List<BookDTO>> groupRecommend(HttpSession session) {
-        // 0.세션 정보 확인
-        System.out.println("Session ID: " + session.getId());
 
         // 1. 세션에 저장된 회원의 연령과 성별 정보를 불러옴
         MemberDTO userData = (MemberDTO) session.getAttribute("loginUser");

@@ -39,7 +39,7 @@ public class BoogiController {
 
         // 첫번째 질문 생성
         String firstQuestion = generateUniqueQuestion(userId, bookTitle);
-        return ResponseEntity.ok(congratsMessage +firstQuestion);
+        return ResponseEntity.ok(congratsMessage + "\n부기: " + firstQuestion);
     }
 
     // 사용자의 답변 받음, 추가 질문 받을지 선택
