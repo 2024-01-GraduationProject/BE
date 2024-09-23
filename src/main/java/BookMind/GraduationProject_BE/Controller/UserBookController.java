@@ -80,7 +80,30 @@ public class UserBookController {
             }
 
             userBookService.markAsCompleted(userId, bookId, lastReadPage, indices);
-            logger.info("책을 독서 완료로 표시: userId: {}, bookId: {}", userId, bookId);
+            logger.info("userId: {}, bookId: {}", userId, bookId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            logger.error("진도율 업데이트 실패: {}", e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    // 독서 중 진행 상황 업데이트
+    @PutMapping("/updateProgress")
+    public ResponseEntity<Void> updateReadingProgress(
+            @RequestParam("userId") Long userId,
+            @RequestParam("bookId") Long bookId,
+            @RequestParam("lastReadPage") float lastReadPage,
+            @RequestParam(value = "indices", required = false) List<Float> indices) {
+
+        try {
+            // 인덱스 리스트가 null일 경우 빈 리스트로 초기화
+            if (indices == null) {
+                indices = new ArrayList<>();
+            }
+
+            userBookService.updateReadingProgress(userId, bookId, lastReadPage, indices);
+            logger.info("책의 읽기 진행 상태 업데이트: userId: {}, bookId: {}", userId, bookId);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             logger.error("진도율 업데이트 실패: {}", e.getMessage());

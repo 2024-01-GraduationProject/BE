@@ -123,6 +123,24 @@ public class UserBookService {
         return userBook;
     }
 
+    // 진도율 업데이트 및 인덱스 저장 메서드 (독서 중 진행 상황 업데이트 시 호출)
+    @Transactional
+    public void updateReadingProgress(Long userId, Long bookId, float lastReadPage, List<Float> indices) {
+        logger.info("사용자 ID: {}, 책 ID: {}의 읽기 진행 상태 업데이트", userId, bookId);
+        String userbookId = userId + "-" + bookId;
+        UserBook userBook = userBookRepository.findById(userbookId)
+                .orElseThrow(() -> new NoSuchElementException("UserBook not found"));
+
+        // 진도율 업데이트
+        userBook.setLastReadPage(lastReadPage);
+
+        // 인덱스 리스트 저장 메서드 호출
+        saveUserBookIndices(userBook, indices);
+
+        // 독서 중 진행 상황 저장
+        userBookRepository.save(userBook);
+    }
+
     public List<UserBook> getReadingBooks(Long userId) {
         logger.info("사용자 ID: {}의 독서 중 목록을 조회", userId);
         return userBookRepository.findAllByUserIdAndStatus(userId, UserBook.Status.READING);
@@ -162,14 +180,8 @@ public class UserBookService {
         // 진도율 업데이트
         userBook.setLastReadPage(lastReadPage);
 
-        // 인덱스 리스트 업데이트
-        for (Float index : indices) {
-            if (!userBookIndicesRepository.existsByUserBookAndIndexPage(userBook, index)) {
-                UserBookIndices newIndex = new UserBookIndices(userBook, index);
-                userBook.getIndexPages().add(newIndex);  // UserBook의 리스트에 추가
-                userBookIndicesRepository.save(newIndex);  // 인덱스 저장
-            }
-        }
+        // 인덱스 리스트 저장 메서드 호출
+        saveUserBookIndices(userBook, indices);
 
         // 진도율이 100일 경우 상태를 COMPLETED로 변경
         if (lastReadPage >= 100.0f) {
@@ -189,6 +201,21 @@ public class UserBookService {
 
         userBookRepository.save(userBook);
 
+    }
+
+    // 인덱스 페이지 저장 메서드
+    public void saveUserBookIndices(UserBook userBook, List<Float> indices) {
+        for (Float index : indices) {
+            logger.info("저장할 인덱스: {}", index); // 인덱스 로그 추가
+            if (!userBookIndicesRepository.existsByUserBookAndIndexPage(userBook, index)) {
+                UserBookIndices newIndex = new UserBookIndices(userBook, index);
+                newIndex.setUserBook(userBook);
+                userBookIndicesRepository.save(newIndex);  // 인덱스 저장
+                logger.info("인덱스 저장: " + index); // 저장 로그
+            } else {
+                logger.info("인덱스가 이미 존재합니다: {}", index);
+            }
+        }
     }
 
 
