@@ -24,5 +24,10 @@ logging:
 openai:
   api:
     key: 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
+# Session setting
+server:
+  servlet:
+    session:
+      timeout: 24h  # 세션 타임아웃을 24시간으로 설정
 
 
