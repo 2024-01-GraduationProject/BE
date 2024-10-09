@@ -19,7 +19,7 @@ public class UserBookIndices {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userbook_id")
+    @JoinColumn(name = "userbook_id", nullable = false)
     private UserBook userBook;
 
     @Column(name = "index_page")
