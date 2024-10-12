@@ -1,7 +1,9 @@
 package BookMind.GraduationProject_BE.Controller;
 
 import BookMind.GraduationProject_BE.DTO.BookDTO;
+import BookMind.GraduationProject_BE.DTO.BookWithCategoriesDTO;
 import BookMind.GraduationProject_BE.Entity.Book;
+import BookMind.GraduationProject_BE.Service.BookCategoryService;
 import BookMind.GraduationProject_BE.Service.BookService;
 import BookMind.GraduationProject_BE.Service.SearchService;
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +32,8 @@ public class BookController {
 
     @Autowired
     private SearchService searchService;
+    @Autowired
+    private BookCategoryService bookCategoryService;
 
     // 모든 책 목록 조회
     @GetMapping
@@ -40,11 +44,18 @@ public class BookController {
 
     // 책 상세 정보 조회
     @GetMapping("/{book_id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable("book_id") Long bookId){
+    public ResponseEntity<BookWithCategoriesDTO> getBookById(@PathVariable("book_id") Long bookId) {
         try {
+            // 책 정보 조회
             BookDTO book = bookService.getBookById(bookId);
+            // 해당 책의 카테고리 정보 조회
+            List<String> bookCategory = bookCategoryService.getCategoryName(bookId);
+
             if (book != null) {
-                return ResponseEntity.ok(book);
+                // BookDTO와 카테고리 리스트를 포함하는 BookWithCategoryDTO 생성
+                BookWithCategoriesDTO response = new BookWithCategoriesDTO(book, bookCategory);
+                System.out.println("bookCategories = " + bookCategory);
+                return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.notFound().build();
             }
