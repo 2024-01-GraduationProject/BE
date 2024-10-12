@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -218,6 +220,27 @@ public class UserBookService {
         }
     }
 
+    // 이 달의 독서량
+    public int monthlyRate(Long userId) {
+        // 사용자의 도서 기록
+        List<UserBook> userBooks = userBookRepository.findByUserId(userId);
+
+        // 현재 연도와 월
+        YearMonth currentYearMonth = YearMonth.now();
+
+        // 현재 달에 해당하는 도서 기록 중 완독한 도서 기록 (end_date 기준)
+        List<UserBook> booksReadThisMonth = userBooks.stream()
+                .filter(book -> book.getEndDate() != null) // end_date가 null이 아닌 (완독된) 도서만 필터링
+                .filter(book -> {
+                    // java.sql.Date를 java.time.LocalDate로 변환
+                    LocalDate endDate = book.getEndDate().toLocalDate();
+                    return YearMonth.from(endDate).equals(currentYearMonth); // end_date가 이번 달에 해당하는지 체크
+                })
+                .collect(Collectors.toList());
+
+        // 이번 달에 완독한 도서 권수
+        return booksReadThisMonth.size();
+    }
 
     private UserBookDTO convertToDTO(UserBook userBook) {
         Book book = bookRepository.findById(userBook.getBookId())
